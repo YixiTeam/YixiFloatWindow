@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="mTextnum">#5a5a5a</color>
+    <color name="axis_color">#5ac5ff</color>
+    <color name="grid_color">#5a5a5a</color>
+    <color name="dot_color">#5ac5ff</color>
+    <color name="round_prggress_Front">#4ed1d5</color>
+
+</resources>

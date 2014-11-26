@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CurveChart">
+        <attr name="xaxis_margin" format="dimension" />
+        <attr name="yaxis_margin" format="dimension" />
+        <attr name="left_padding" format="dimension" />
+        <attr name="bottom_padding" format="dimension" />
+        <attr name="cell_width" format="dimension" />
+        <attr name="cell_height" format="dimension" />
+    </declare-styleable>
+
+</resources>

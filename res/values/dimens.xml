@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="curve_chart_axis_width">2dp</dimen>
+    <dimen name="curve_chart_grid_width">0.5dp</dimen>
+    <dimen name="curve_chart_line_width">2dp</dimen>
+    <dimen name="curve_chart_dot_inner_radius">3dp</dimen>
+    <dimen name="curve_chart_dot_outer_radius">5dp</dimen>
+    <dimen name="curve_chart_xaxis_bottom_margin">20dp</dimen>
+    <dimen name="curve_chart_yaxis_left_margin">5dp</dimen>
+</resources>
