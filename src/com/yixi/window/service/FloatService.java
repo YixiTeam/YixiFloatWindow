@@ -1,15 +1,13 @@
 package com.yixi.window.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.ActivityManager;
-import android.app.Application;
-import android.app.Service;
 import android.app.ActivityManager.RunningTaskInfo;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,20 +16,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.ab.util.AbDateUtil;
-import com.yixi.window.service.IService;
-import com.j256.ormlite.dao.Dao;
 import com.yixi.window.config.AppData;
-import com.yixi.window.floatwindow.FxWindowManager;
+import com.yixi.window.floatwindow.FloatWindowManager;
 
 public class FloatService extends Service {
 
@@ -41,7 +34,7 @@ public class FloatService extends Service {
     private AppData mAppData = null;
     private Handler handler = new Handler();
     private Timer timer;
-    private FxWindowManager mFXWindowManager;
+    private FloatWindowManager mFloatWindowManager;
     private Context mContext;
     private boolean window_is_show = true;
     private boolean isshow=false;
@@ -77,7 +70,7 @@ public class FloatService extends Service {
         mSensorMgr = (SensorManager) this
                 .getSystemService(android.content.Context.SENSOR_SERVICE);
         mContext=this.getApplicationContext();
-        mFXWindowManager = new FxWindowManager(mContext);
+        mFloatWindowManager = new FloatWindowManager(mContext);
         IntentFilter filter=new IntentFilter("com.phicomm.WINDOW_IS_SHOW");
         registerReceiver(mBroadcastReceiver, filter);
         mAppData = new AppData(this);
@@ -149,8 +142,8 @@ public class FloatService extends Service {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        mFXWindowManager.removeAllWindow(getApplicationContext());
-        //mFXWindowManager = null;
+        mFloatWindowManager.removeAllWindow(getApplicationContext());
+        //mFloatWindowManager = null;
         stopStep();
         timer.cancel();
         timer = null;
@@ -178,28 +171,28 @@ public class FloatService extends Service {
     class RefreshTask extends TimerTask {
         @Override
         public void run() {
-            if (isHome() && !mFXWindowManager.isWindowShowing()&& window_is_show) {
+            if (isHome() && !mFloatWindowManager.isWindowShowing()&& window_is_show) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         if(!isshow){
-                            mFXWindowManager.createSmallWindow(mContext);
+                            mFloatWindowManager.createSmallWindow(mContext);
                             isshow=true;
                         }
                     }
                 });
             }
-            else if ((!isHome() && mFXWindowManager.isWindowShowing()) || !window_is_show){
+            else if ((!isHome() && mFloatWindowManager.isWindowShowing()) || !window_is_show){
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mFXWindowManager
+                        mFloatWindowManager
                                 .removeAllWindow(getApplicationContext());
                         isshow=false;
                     }
                 });
             }
-            else if (isHome() && mFXWindowManager.isWindowShowing()) {
+            else if (isHome() && mFloatWindowManager.isWindowShowing()) {
                 handler.post(new Runnable() {
 
                     @Override

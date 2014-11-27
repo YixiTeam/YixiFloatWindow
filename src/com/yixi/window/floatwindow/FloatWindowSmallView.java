@@ -35,9 +35,9 @@ public class FloatWindowSmallView extends LinearLayout {
 
     private FloatWindowBigView bigWindow;
 
-    FxWindowManager mFXWindowManager;
+    FloatWindowManager mFloatWindowManager;
 
-    public FloatWindowSmallView(Context context, FxWindowManager fxWindowManager) {
+    public FloatWindowSmallView(Context context, FloatWindowManager floatWindowManager) {
         super(context);
         windowManager = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -47,7 +47,7 @@ public class FloatWindowSmallView extends LinearLayout {
         viewHeight = view.getLayoutParams().height;
         image = (ImageView) findViewById(R.id.image);
         // percentView.setText(MyWindowManager.getUsedPercentValue(context));
-        mFXWindowManager = fxWindowManager;
+        mFloatWindowManager = floatWindowManager;
 
     }
 
@@ -108,8 +108,8 @@ public class FloatWindowSmallView extends LinearLayout {
     }
 
     private void openBigWindow() {
-        mFXWindowManager.removeSmallWindow(getContext());
-        mFXWindowManager.createBigWindow(getContext());
+        mFloatWindowManager.removeSmallWindow(getContext());
+        mFloatWindowManager.createBigWindow(getContext());
     }
 
     class launchTask extends AsyncTask<Void, Void, Void> {

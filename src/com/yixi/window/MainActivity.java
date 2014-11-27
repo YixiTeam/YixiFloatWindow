@@ -51,7 +51,6 @@ public class MainActivity extends AbActivity {
             myService = new Intent(this.getApplicationContext(),
                     FloatService.class);
         }
-        myService.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         bindService(myService, sc, BIND_AUTO_CREATE);
     }
 

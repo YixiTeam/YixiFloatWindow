@@ -56,14 +56,14 @@ public class FloatWindowBigView extends LinearLayout {
     ObjectAnimator visToInvis;
     ObjectAnimator invisToVis;
     private Context mContext;
-    private FxWindowManager mFXWindowManager;
+    private FloatWindowManager mFloatWindowManager;
 
     public static final int ANIMATION_PERIOD = 200;
 
-    public FloatWindowBigView(Context context, FxWindowManager fxWindowManager) {
+    public FloatWindowBigView(Context context, FloatWindowManager fxWindowManager) {
         super(context);
         mContext = context;
-        mFXWindowManager = fxWindowManager;
+        mFloatWindowManager = fxWindowManager;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater.from(context).inflate(R.layout.floatwindowbig, this);
         mFrameLayout = (FrameLayout) findViewById(R.id.bigwindowlayout);
@@ -164,7 +164,6 @@ public class FloatWindowBigView extends LinearLayout {
 //        mWindowFront = (RelativeLayout) findViewById(R.id.windowfront);
 //        mWindowBack = (RelativeLayout) findViewById(R.id.windowback);
 		
-        mFXWindowManager.setFlag(TAG_SWITCH_CIRCLE_PAGE_STEP);
         viewWidth = mFrameLayout.getLayoutParams().width;
         viewHeight = mFrameLayout.getLayoutParams().height;
         Log.d("ljz", "----FloatWindowBigView---------viewWidth = " + viewWidth + ",--viewHeight = " + viewHeight);
@@ -196,8 +195,8 @@ public class FloatWindowBigView extends LinearLayout {
     }
 
     private void openSmallWindow() {
-        mFXWindowManager.createSmallWindow(getContext());
-        mFXWindowManager.removeBigWindow(getContext());
+        mFloatWindowManager.createSmallWindow(getContext());
+        mFloatWindowManager.removeBigWindow(getContext());
     }
 
     private int getStatusBarHeight() {

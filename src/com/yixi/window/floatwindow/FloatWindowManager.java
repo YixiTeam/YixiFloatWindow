@@ -13,7 +13,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 
-public class FxWindowManager {
+public class FloatWindowManager {
 
     private FloatWindowSmallView smallWindow;
     private FloatWindowBigView bigWindow;
@@ -22,13 +22,9 @@ public class FxWindowManager {
     private WindowManager mWindowManager;
     private Context mContext;
     public Thread mThread;
-    private int oldStepFlag = 0;
-    private double oldCaolorieFlag = 0.00;
     public Message msg;
-    private int TAG_SWITCH_CIRCLE_PAGE_STEP = 2;
-    private int mFlag = TAG_SWITCH_CIRCLE_PAGE_STEP;
     private WindowManager windowManager;
-    public FxWindowManager(Context context) {
+    public FloatWindowManager(Context context) {
         mContext = context;
         windowManager = getWindowManager(context);
     }
@@ -182,16 +178,6 @@ public class FxWindowManager {
             }
         });
         view.startAnimation(scaleAnimation);
-    }
-
-    public void setFlag(int falg) {
-        this.mFlag = falg;
-
-    }
-
-    public boolean getFlag() {
-        return mFlag == TAG_SWITCH_CIRCLE_PAGE_STEP ? true : false;
-
     }
 
 }
