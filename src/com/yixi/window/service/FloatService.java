@@ -142,7 +142,7 @@ public class FloatService extends Service {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        mFloatWindowManager.removeAllWindow(getApplicationContext());
+//        mFloatWindowManager.removeAllWindow(getApplicationContext());
         //mFloatWindowManager = null;
         stopStep();
         timer.cancel();
@@ -186,8 +186,7 @@ public class FloatService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mFloatWindowManager
-                                .removeAllWindow(getApplicationContext());
+//                        mFloatWindowManager.removeAllWindow(getApplicationContext());
                         isshow=false;
                     }
                 });

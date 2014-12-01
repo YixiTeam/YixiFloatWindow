@@ -44,6 +44,11 @@ public class FloatWindowBigView extends LinearLayout {
     ImageView cleanImageview;
     ImageView setImageview;
     
+    ImageView shotBtn;
+    ImageView lockBtn;
+    ImageView upBtn;
+    ImageView downBtn;
+    
     Button backBut;
     Button exitBut;
     
@@ -77,6 +82,48 @@ public class FloatWindowBigView extends LinearLayout {
         
         backBut = (Button) findViewById(R.id.back);
         exitBut = (Button) findViewById(R.id.exit);
+        
+        shotBtn = (ImageView) findViewById(R.id.shotscreen);
+        lockBtn = (ImageView) findViewById(R.id.lock);
+        upBtn = (ImageView) findViewById(R.id.volume_up);
+        downBtn = (ImageView) findViewById(R.id.volume_down);
+        
+		shotBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------shotBtn------Click!!-----");
+			}
+		});
+
+		lockBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------lockBtn------Click!!-----");
+				mylock();
+			}
+		});
+
+		upBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------upBtn------Click!!-----");
+			}
+		});
+
+		downBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG, "------FloatWindowBigView--------downBtn------Click!!-----");
+			}
+		});
         
         backBut.setOnClickListener(new OnClickListener() {
 			
