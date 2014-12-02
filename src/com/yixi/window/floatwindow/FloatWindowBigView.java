@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.media.AudioManager;
+import android.os.RemoteException;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,6 +21,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.os.ServiceManager;
+import android.os.IPowerManager;
+import android.os.IPowerManager.Stub;
 
 import com.yixi.window.R;
 
@@ -52,6 +58,7 @@ public class FloatWindowBigView extends LinearLayout {
     Button backBut;
     Button exitBut;
     
+    private IPowerManager mIPowerManager;
     
     int TAG_SWITCH_CONTROL_PAGE_BUTTON = 0;
     int TAG_SWITCH_MARK_PAGE_BUTTON = 1;
@@ -68,6 +75,7 @@ public class FloatWindowBigView extends LinearLayout {
     public FloatWindowBigView(Context context, FloatWindowManager fxWindowManager) {
         super(context);
         mContext = context;
+        this.mIPowerManager = IPowerManager.Stub.asInterface(ServiceManager.getService("power"));
         mFloatWindowManager = fxWindowManager;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater.from(context).inflate(R.layout.floatwindowbig, this);
@@ -103,7 +111,17 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------lockBtn------Click!!-----");
-				mylock();
+				try
+		        {
+		          mIPowerManager.goToSleep(SystemClock.uptimeMillis(), 0);
+		          openSmallWindow();
+		          return;
+		        }
+		        catch (RemoteException localRemoteException)
+		        {
+		          Log.e("TydFloatTask.FloatTaskActivity", localRemoteException.toString());
+		          return;
+		        }
 			}
 		});
 
@@ -113,6 +131,11 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------upBtn------Click!!-----");
+				AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+				int music_vol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+				Log.d(TAG,	"------FloatWindowBigView--------upBtn-----music_vol = " + music_vol);
+				mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, music_vol+1, AudioManager.FLAG_SHOW_UI);
 			}
 		});
 
@@ -122,6 +145,18 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG, "------FloatWindowBigView--------downBtn------Click!!-----");
+				AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+				int music_vol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+				Log.d(TAG,	"---1111---FloatWindowBigView--------downBtn-----music_vol = " + music_vol);
+				
+				if (music_vol != 0) {
+					Log.d(TAG,	"--2222----FloatWindowBigView--------downBtn-----music_vol = " + music_vol);
+					mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, music_vol-1, AudioManager.FLAG_SHOW_UI);
+				} else {
+					Log.d(TAG,	"---3333---FloatWindowBigView--------downBtn-----music_vol = " + music_vol);
+//					mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+					mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+				}
 			}
 		});
         
@@ -215,7 +250,7 @@ public class FloatWindowBigView extends LinearLayout {
         viewHeight = mFrameLayout.getLayoutParams().height;
         Log.d("ljz", "----FloatWindowBigView---------viewWidth = " + viewWidth + ",--viewHeight = " + viewHeight);
     }
-
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
