@@ -24,7 +24,7 @@ import android.os.RemoteException;
 
 import com.ab.util.AbDateUtil;
 import com.yixi.window.config.AppData;
-import com.yixi.window.floatwindow.FloatWindowManager;
+import com.yixi.window.FloatWindowManager;
 
 public class FloatService extends Service {
 

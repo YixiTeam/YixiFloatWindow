@@ -1,4 +1,4 @@
-package com.yixi.window.floatwindow;
+package com.yixi.window.view;
 
 import java.lang.reflect.Field;
 
@@ -16,6 +16,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.yixi.window.FloatWindowManager;
 
 public class FloatWindowSmallView extends LinearLayout {
 

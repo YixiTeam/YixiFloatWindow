@@ -1,4 +1,4 @@
-package com.yixi.window.floatwindow;
+package com.yixi.window.view;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;

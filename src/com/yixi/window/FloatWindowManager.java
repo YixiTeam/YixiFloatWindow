@@ -1,4 +1,7 @@
-package com.yixi.window.floatwindow;
+package com.yixi.window;
+
+import com.yixi.window.view.FloatWindowBigView;
+import com.yixi.window.view.FloatWindowSmallView;
 
 import android.content.Context;
 import android.graphics.PixelFormat;

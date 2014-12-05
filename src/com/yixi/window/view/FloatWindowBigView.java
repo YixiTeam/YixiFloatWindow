@@ -1,4 +1,4 @@
-package com.yixi.window.floatwindow;
+package com.yixi.window.view;
 
 import java.lang.reflect.Field;
 
@@ -25,6 +25,7 @@ import android.os.ServiceManager;
 import android.os.IPowerManager;
 import android.os.IPowerManager.Stub;
 
+import com.yixi.window.FloatWindowManager;
 import com.yixi.window.R;
 
 public class FloatWindowBigView extends LinearLayout {
