@@ -5,7 +5,7 @@
     android:layout_height="330.6dp"
     android:background="@drawable/bg_pedometer"
     android:gravity="center" >
-    
+
     <include
         android:id="@+id/head_layout"
         android:layout_width="320.6dp"
@@ -20,17 +20,11 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <TextView 
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/hello_world"
-                android:textSize="20sp" />
-        </LinearLayout>
+        <com.yixi.window.view.FloatMusicView
+            android:id="@+id/music_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </com.yixi.window.view.FloatMusicView>
     </FrameLayout>
 
 </RelativeLayout>

@@ -45,6 +45,11 @@
                 <action android:name="com.yixi.service.FloatService" />
             </intent-filter>
         </service>
+                <service android:name = "com.yixi.window.service.MusicService">
+            <intent-filter>
+                <action android:name = "com.yixi.window.service.musicservices"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
