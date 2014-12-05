@@ -170,6 +170,9 @@ public class FloatWindowManager {
     
     public void removeBigWindow2(Context context) {
         if (bigWindow2 != null) {
+        	if (bigWindow2.mActionCallBack != null) {
+        		bigWindow2.mActionCallBack.doAction();
+        	}
             windowManager.removeView(bigWindow2);
             bigWindow2 = null;
         }

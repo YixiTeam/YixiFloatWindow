@@ -44,6 +44,8 @@ public class FloatWindowBigView2 extends LinearLayout {
     Button exitBut;
     TextView title;
     
+    public ActionCallBack mActionCallBack;
+    
     public interface ActionCallBack{
     	public void doAction();
     }
@@ -95,6 +97,7 @@ public class FloatWindowBigView2 extends LinearLayout {
         	case R.layout.floatwindownote:
         		title.setText(R.string.note);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
+        		mActionCallBack = (ActionCallBack) findViewById(R.id.note);
         		break;
         	case R.layout.floatwindowsearch:
         		title.setText(R.string.search);
