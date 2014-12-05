@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.yixi.window.FloatWindowManager;
 import com.yixi.window.R;
@@ -41,6 +42,9 @@ public class FloatWindowBigView2 extends LinearLayout {
     
     Button backBut;
     Button exitBut;
+    TextView title;
+    
+    public ActionCallBack mActionCallBack;
     
     public interface ActionCallBack{
     	public void doAction();
@@ -68,19 +72,35 @@ public class FloatWindowBigView2 extends LinearLayout {
         
         backBut = (Button) findViewById(R.id.back);
         exitBut = (Button) findViewById(R.id.exit);
+        title = (TextView) findViewById(R.id.title);
         Log.d(TAG, "------FloatWindowBigView--------layout_id-----" + layout_id);
         Log.d(TAG, "------FloatWindowBigView--------R.layout.floatwindowmedia-----" + R.layout.floatwindowmedia);
         Log.d(TAG, "------FloatWindowBigView--------R.layout.floatwindowidget-----" + R.layout.floatwindowidget);
         Log.d(TAG, "------FloatWindowBigView--------R.layout.floatwindowset-----" + R.layout.floatwindowset);
         switch(layout_id) {
         	case R.layout.floatwindowmusic:
+        		mFlag = FloatWindowManager.MEDIA_LAYER;
+        		title.setText(R.string.music);
+        		break;
         	case R.layout.floatwindowvideo:
+        		title.setText(R.string.video);
         		mFlag = FloatWindowManager.MEDIA_LAYER;
         		break;
         	case R.layout.floatwindowcal:
+        		title.setText(R.string.cal);
+        		mFlag = FloatWindowManager.WIDGET_LAYER;
+        		break;
         	case R.layout.floatwindowcon:
+        		title.setText(R.string.contacts);
+        		mFlag = FloatWindowManager.WIDGET_LAYER;
+        		break;
         	case R.layout.floatwindownote:
+        		title.setText(R.string.note);
+        		mFlag = FloatWindowManager.WIDGET_LAYER;
+        		mActionCallBack = (ActionCallBack) findViewById(R.id.note);
+        		break;
         	case R.layout.floatwindowsearch:
+        		title.setText(R.string.search);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;
         	default:
