@@ -1,6 +1,7 @@
 package com.yixi.window;
 
 import com.yixi.window.view.FloatWindowBigView;
+import com.yixi.window.view.FloatWindowBigView2;
 import com.yixi.window.view.FloatWindowSmallView;
 
 import android.content.Context;
@@ -18,8 +19,14 @@ import android.view.animation.ScaleAnimation;
 
 public class FloatWindowManager {
 
+	public static final int TOP_LAYER = 0;
+	public static final int MEDIA_LAYER = 1;
+	public static final int WIDGET_LAYER = 2;
+	public static final int SET_LAYER = 3;
+	
     private FloatWindowSmallView smallWindow;
     private FloatWindowBigView bigWindow;
+    private FloatWindowBigView2 bigWindow2;
     private LayoutParams smallWindowParams;
     private LayoutParams bigWindowParams;
     private WindowManager mWindowManager;
@@ -60,16 +67,16 @@ public class FloatWindowManager {
 
     }
 
-    public void createBigWindow(Context context) {
+    public void createBigWindow(Context context, int flag) {
         int screenWidth = windowManager.getDefaultDisplay().getWidth();
         int screenHeight = windowManager.getDefaultDisplay().getHeight();
 
-        Log.d("ljz", "----FxWindowManager---createBigWindow------screenWidth = " + screenWidth + ",-----screenHeight = " + screenHeight);
+        Log.d("ljz", "----FloatWindowManager---createBigWindow------screenWidth = " + screenWidth + ",-----screenHeight = " + screenHeight);
         if (bigWindow == null) {
-            bigWindow = new FloatWindowBigView(context, this);
-            Log.d("ljz", "----FxWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
+            bigWindow = new FloatWindowBigView(context, this, flag);
+            Log.d("ljz", "----FloatWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
             if (bigWindowParams == null) {
-            	Log.d("ljz", "----FxWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
+            	Log.d("ljz", "----FloatWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
                 bigWindowParams = new LayoutParams();
                 bigWindowParams.x = screenWidth / 2
                         - FloatWindowBigView.viewWidth / 2;
@@ -81,10 +88,45 @@ public class FloatWindowManager {
                 bigWindowParams.width = FloatWindowBigView.viewWidth;
                 bigWindowParams.height = FloatWindowBigView.viewHeight;
             }
-            Log.d("ljz", "----FxWindowManager---createBigWindow------addView = ");
+            Log.d("ljz", "----FloatWindowManager---createBigWindow------addView = ");
             windowManager.addView(bigWindow, bigWindowParams);
         }
         ScaleToNormal(bigWindow);
+
+//        StepView stepCount = (StepView) bigWindow
+//                .findViewById(R.id.stepview);
+        //CalorieView calorie=(CalorieView) bigWindow.findViewById(R.id.calorieview);
+//        if(stepCount.isShown()){
+//            stepCount.update(mData.getNewStepValue());
+//        }
+
+    }
+    
+    public void createBigWindow2(Context context, int id) {
+        int screenWidth = windowManager.getDefaultDisplay().getWidth();
+        int screenHeight = windowManager.getDefaultDisplay().getHeight();
+
+        Log.d("ljz", "----FloatWindowManager---createBigWindow------screenWidth = " + screenWidth + ",-----screenHeight = " + screenHeight);
+        if (bigWindow2 == null) {
+            bigWindow2 = new FloatWindowBigView2(context, this, id);
+            Log.d("ljz", "----FloatWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
+            if (bigWindowParams == null) {
+            	Log.d("ljz", "----FloatWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
+                bigWindowParams = new LayoutParams();
+                bigWindowParams.x = screenWidth / 2
+                        - FloatWindowBigView.viewWidth / 2;
+                bigWindowParams.y = screenHeight / 2
+                        - FloatWindowBigView.viewHeight / 2;
+                bigWindowParams.type = LayoutParams.TYPE_PHONE;
+                bigWindowParams.format = PixelFormat.RGBA_8888;
+                bigWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
+                bigWindowParams.width = FloatWindowBigView.viewWidth;
+                bigWindowParams.height = FloatWindowBigView.viewHeight;
+            }
+            Log.d("ljz", "----FloatWindowManager---createBigWindow------addView = ");
+            windowManager.addView(bigWindow2, bigWindowParams);
+        }
+        ScaleToNormal(bigWindow2);
 
 //        StepView stepCount = (StepView) bigWindow
 //                .findViewById(R.id.stepview);
@@ -100,7 +142,7 @@ public class FloatWindowManager {
         int screenHeight = windowManager.getDefaultDisplay().getHeight();
 
         if (bigWindow == null) {
-            bigWindow = new FloatWindowBigView(context, this);
+            bigWindow = new FloatWindowBigView(context, this, 0);
             if (bigWindowParams == null) {
                 bigWindowParams = new LayoutParams();
                 bigWindowParams.x = screenWidth / 2
@@ -124,8 +166,15 @@ public class FloatWindowManager {
             windowManager.removeView(bigWindow);
             bigWindow = null;
         }
-
     }
+    
+    public void removeBigWindow2(Context context) {
+        if (bigWindow2 != null) {
+            windowManager.removeView(bigWindow2);
+            bigWindow2 = null;
+        }
+    }
+    
     public void removeAllWindow(Context context){
         if (bigWindow != null) {
             windowManager.removeView(bigWindow);

@@ -1,16 +1,30 @@
 package com.yixi.window.view;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import android.animation.ObjectAnimator;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -56,6 +70,14 @@ public class FloatWindowBigView extends LinearLayout {
     ImageView upBtn;
     ImageView downBtn;
     
+    ImageView calBtn;
+    ImageView conBtn;
+    ImageView noteBtn;
+    ImageView seaBtn;
+    
+    ImageView musicBtn;
+    ImageView videoBtn;
+    
     Button backBut;
     Button exitBut;
     
@@ -73,11 +95,11 @@ public class FloatWindowBigView extends LinearLayout {
 
     public static final int ANIMATION_PERIOD = 200;
 
-    public FloatWindowBigView(Context context, FloatWindowManager fxWindowManager) {
+    public FloatWindowBigView(Context context, FloatWindowManager floatWindowManager, int flag) {
         super(context);
         mContext = context;
         this.mIPowerManager = IPowerManager.Stub.asInterface(ServiceManager.getService("power"));
-        mFloatWindowManager = fxWindowManager;
+        mFloatWindowManager = floatWindowManager;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater.from(context).inflate(R.layout.floatwindowbig, this);
         mFrameLayout = (FrameLayout) findViewById(R.id.bigwindowlayout);
@@ -97,12 +119,81 @@ public class FloatWindowBigView extends LinearLayout {
         upBtn = (ImageView) findViewById(R.id.volume_up);
         downBtn = (ImageView) findViewById(R.id.volume_down);
         
+        calBtn = (ImageView) findViewById(R.id.calculator);
+        conBtn = (ImageView) findViewById(R.id.contacts);
+        noteBtn = (ImageView) findViewById(R.id.note);
+        seaBtn = (ImageView) findViewById(R.id.search);
+        
+        musicBtn = (ImageView) findViewById(R.id.music);
+        videoBtn = (ImageView) findViewById(R.id.video);
+        
+        noteBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------noteBtn------Click!!-----");
+				openNextWindow(R.layout.floatwindownote);
+			}
+		});
+        
+        conBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------conBtn------Click!!-----");
+				openNextWindow(R.layout.floatwindowcon);
+			}
+		});
+        
+        calBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------calBtn------Click!!-----");
+				openNextWindow(R.layout.floatwindowcal);
+			}
+		});
+        
+        seaBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------seaBtn------Click!!-----");
+				openNextWindow(R.layout.floatwindowsearch);
+			}
+		});
+        
+        musicBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------musicBtn------Click!!-----");
+				openNextWindow(R.layout.floatwindowmusic);
+			}
+		});
+        
+        videoBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,	"------FloatWindowBigView--------videoBtn------Click!!-----");
+				openNextWindow(R.layout.floatwindowvideo);
+			}
+		});
+        
 		shotBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------shotBtn------Click!!-----");
+				shotscreen();
 			}
 		});
 
@@ -190,7 +281,7 @@ public class FloatWindowBigView extends LinearLayout {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Log.d(TAG, "------FloatWindowBigView--------imageview1------Click!!-----");
+				Log.d(TAG, "------FloatWindowBigView--------mediaImageview------Click!!-----");
 //				mRelativeLayout.setVisibility(View.VISIBLE);
 				mFrameLayout.setVisibility(View.GONE);
 				findViewById(R.id.head_layout).setVisibility(View.VISIBLE);
@@ -228,6 +319,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------cleanImageview------Click!!-----");
+				removeRecentTask();
 			}
 		});
 		setImageview.setOnClickListener(new OnClickListener() {
@@ -250,6 +342,140 @@ public class FloatWindowBigView extends LinearLayout {
         viewWidth = mFrameLayout.getLayoutParams().width;
         viewHeight = mFrameLayout.getLayoutParams().height;
         Log.d("ljz", "----FloatWindowBigView---------viewWidth = " + viewWidth + ",--viewHeight = " + viewHeight);
+        Log.d(TAG, "-------FloatWindowBigView-------flag------------" + flag);
+        switch(flag) {
+        	case FloatWindowManager.TOP_LAYER:
+        		break;
+        	case FloatWindowManager.MEDIA_LAYER:
+        		mFrameLayout.setVisibility(View.GONE);
+				findViewById(R.id.head_layout).setVisibility(View.VISIBLE);
+				findViewById(R.id.media_layout).setVisibility(View.VISIBLE);
+				findViewById(R.id.widget_layout).setVisibility(View.GONE);
+				findViewById(R.id.seting_layout).setVisibility(View.GONE);
+        		break;
+        	case FloatWindowManager.WIDGET_LAYER:
+        		mFrameLayout.setVisibility(View.GONE);
+				findViewById(R.id.head_layout).setVisibility(View.VISIBLE);
+				findViewById(R.id.media_layout).setVisibility(View.GONE);
+				findViewById(R.id.widget_layout).setVisibility(View.VISIBLE);
+				findViewById(R.id.seting_layout).setVisibility(View.GONE);
+        		break;
+        	case FloatWindowManager.SET_LAYER:
+        		mFrameLayout.setVisibility(View.GONE);
+				findViewById(R.id.head_layout).setVisibility(View.VISIBLE);
+				findViewById(R.id.media_layout).setVisibility(View.GONE);
+				findViewById(R.id.widget_layout).setVisibility(View.GONE);
+				findViewById(R.id.seting_layout).setVisibility(View.VISIBLE);
+        		break;
+        	default:
+        		break;
+        	
+        }
+    }
+    
+    private Display mDisplay;
+    private DisplayMetrics mDisplayMetrics;
+    private Matrix mDisplayMatrix;
+    private Bitmap mScreenBitmap;
+    private WindowManager mWindowManager;
+    private void shotscreen() {
+    	mDisplayMatrix = new Matrix();
+        
+        mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        mDisplay = mWindowManager.getDefaultDisplay();
+        mDisplayMetrics = new DisplayMetrics();
+        mDisplay.getRealMetrics(mDisplayMetrics);
+    	mDisplay.getRealMetrics(mDisplayMetrics);
+        float[] dims = {mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels};
+        float degrees = getDegreesForRotation(mDisplay.getRotation());
+        boolean requiresRotation = (degrees > 0);
+        if (requiresRotation) {
+            // Get the dimensions of the device in its native orientation
+            mDisplayMatrix.reset();
+            mDisplayMatrix.preRotate(-degrees);
+            mDisplayMatrix.mapPoints(dims);
+            dims[0] = Math.abs(dims[0]);
+            dims[1] = Math.abs(dims[1]);
+        }
+        
+        mScreenBitmap = SurfaceControl.screenshot((int) dims[0], (int) dims[1]);
+        if (requiresRotation) {
+            // Rotate the screenshot to the current orientation
+            Bitmap ss = Bitmap.createBitmap(mDisplayMetrics.widthPixels,
+                    mDisplayMetrics.heightPixels, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(ss);
+            c.translate(ss.getWidth() / 2, ss.getHeight() / 2);
+            c.rotate(degrees);
+            c.translate(-dims[0] / 2, -dims[1] / 2);
+            c.drawBitmap(mScreenBitmap, 0, 0, null);
+            c.setBitmap(null);
+            mScreenBitmap = ss;
+        }
+
+        // If we couldn't take the screenshot, notify the user
+        if (mScreenBitmap == null) {
+           
+            return;
+        }
+
+        // Optimizations
+        mScreenBitmap.setHasAlpha(false);
+        mScreenBitmap.prepareToDraw();
+        try {
+        	saveMyBitmap("shotscreen", mScreenBitmap);
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
+        
+    }
+    
+    /**
+     * @return the current display rotation in degrees
+     */
+    private float getDegreesForRotation(int value) {
+        switch (value) {
+        case Surface.ROTATION_90:
+            return 360f - 90f;
+        case Surface.ROTATION_180:
+            return 360f - 180f;
+        case Surface.ROTATION_270:
+            return 360f - 270f;
+        }
+        return 0f;
+    }
+    
+    private void saveMyBitmap(String bitName, Bitmap bitmap) throws IOException {
+        File f = new File("/data/data/com.yixi.window/" + bitName + ".png");
+        f.createNewFile();
+        FileOutputStream fOut = null;
+        try {
+                fOut = new FileOutputStream(f);
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        }
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+        try {
+                fOut.flush();
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+        try {
+                fOut.close();
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
+    
+    private void removeRecentTask() {
+    	final ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+//    	final List<ActivityManager.RecentTaskInfo> recentTasks = am.getRecentTasks(2, ActivityManager.RECENT_WITH_EXCLUDED);
+    	final List<RunningTaskInfo> recentTasks = am.getRunningTasks(10);
+    	for (int i = 0; i<recentTasks.size(); i++) {
+    		Log.d(TAG, "-------removeRecentTask-----1--i = " + i + "--- " + recentTasks.get(i).toString());
+    		am.removeTask(recentTasks.get(i).id, ActivityManager.REMOVE_TASK_KILL_PROCESS);
+//    		Log.d(TAG, "-------removeRecentTask----2---i = " + i + "--- " + recentTasks.get(i));
+    	}
+    	
     }
     
     @Override
@@ -280,8 +506,15 @@ public class FloatWindowBigView extends LinearLayout {
     private void openSmallWindow() {
         mFloatWindowManager.createSmallWindow(getContext());
         mFloatWindowManager.removeBigWindow(getContext());
+        mFloatWindowManager.removeBigWindow2(getContext());
     }
-
+    
+    private void openNextWindow(int id) {
+        mFloatWindowManager.removeBigWindow(getContext());
+        mFloatWindowManager.removeBigWindow(getContext());
+        mFloatWindowManager.createBigWindow2(getContext(), id);
+    }
+    
     private int getStatusBarHeight() {
         if (statusBarHeight == 0) {
             try {

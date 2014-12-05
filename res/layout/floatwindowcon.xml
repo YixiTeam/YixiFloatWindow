@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_container"
+    android:layout_width="320.6dp"
+    android:layout_height="330.6dp"
+    android:background="@drawable/bg_pedometer"
+    android:gravity="center" >
+    
+    <include
+        android:id="@+id/head_layout"
+        android:layout_width="320.6dp"
+        android:layout_height="wrap_content"
+        layout="@layout/floatwindowhead" />
+
+    <FrameLayout
+        android:layout_width="320.6dp"
+        android:layout_height="285.6dp"
+        android:layout_below="@id/head_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView 
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/hello_world"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>

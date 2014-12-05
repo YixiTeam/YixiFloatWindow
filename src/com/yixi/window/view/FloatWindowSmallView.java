@@ -110,7 +110,7 @@ public class FloatWindowSmallView extends LinearLayout {
 
     private void openBigWindow() {
         mFloatWindowManager.removeSmallWindow(getContext());
-        mFloatWindowManager.createBigWindow(getContext());
+        mFloatWindowManager.createBigWindow(getContext(), 0);
     }
 
     class launchTask extends AsyncTask<Void, Void, Void> {
