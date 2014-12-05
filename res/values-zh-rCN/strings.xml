@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">悬浮框小助手</string>
+    <string name="menu_settings">设置</string>
+    <string name="media">多媒体</string>
+    <string name="widget">小部件</string>
+    <string name="set">设置</string>
+    <string name="music">音乐</string>
+    <string name="video">视频</string>
+    <string name="cal">计算器</string>
+    <string name="note">便签</string>
+    <string name="contacts">联系人</string>
+    <string name="search">搜索</string>
     <string name="clean_histroy">清空历史</string>
 
 </resources>

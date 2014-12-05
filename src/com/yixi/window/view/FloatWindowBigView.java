@@ -35,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.os.ServiceManager;
 import android.os.IPowerManager;
 import android.os.IPowerManager.Stub;
@@ -80,6 +81,7 @@ public class FloatWindowBigView extends LinearLayout {
     
     Button backBut;
     Button exitBut;
+    TextView title;
     
     private IPowerManager mIPowerManager;
     
@@ -113,6 +115,7 @@ public class FloatWindowBigView extends LinearLayout {
         
         backBut = (Button) findViewById(R.id.back);
         exitBut = (Button) findViewById(R.id.exit);
+        title = (TextView) findViewById(R.id.title);
         
         shotBtn = (ImageView) findViewById(R.id.shotscreen);
         lockBtn = (ImageView) findViewById(R.id.lock);
@@ -288,6 +291,7 @@ public class FloatWindowBigView extends LinearLayout {
 				findViewById(R.id.media_layout).setVisibility(View.VISIBLE);
 				findViewById(R.id.widget_layout).setVisibility(View.GONE);
 				findViewById(R.id.seting_layout).setVisibility(View.GONE);
+				title.setText(R.string.media);
 			}
 		});
 		
@@ -302,6 +306,7 @@ public class FloatWindowBigView extends LinearLayout {
 				findViewById(R.id.media_layout).setVisibility(View.GONE);
 				findViewById(R.id.widget_layout).setVisibility(View.VISIBLE);
 				findViewById(R.id.seting_layout).setVisibility(View.GONE);
+				title.setText(R.string.widget);
 			}
 		});
 		missImageview.setOnClickListener(new OnClickListener() {
@@ -333,6 +338,7 @@ public class FloatWindowBigView extends LinearLayout {
 				findViewById(R.id.media_layout).setVisibility(View.GONE);
 				findViewById(R.id.widget_layout).setVisibility(View.GONE);
 				findViewById(R.id.seting_layout).setVisibility(View.VISIBLE);
+				title.setText(R.string.set);
 			}
 		});
         
