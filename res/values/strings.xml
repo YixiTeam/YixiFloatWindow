@@ -14,5 +14,6 @@
     <string name="contacts">Contacts</string>
     <string name="search">Search</string>
     <string name="clean_histroy">clean histroy</string>
+    <string name="default_time">"00:00"</string>
     
 </resources>
