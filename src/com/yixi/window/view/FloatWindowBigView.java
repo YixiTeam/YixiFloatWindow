@@ -326,7 +326,6 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------cleanImageview------Click!!-----");
-				removeRecentTask();
 				clearMemory();
 				openSmallWindow();
 			}
