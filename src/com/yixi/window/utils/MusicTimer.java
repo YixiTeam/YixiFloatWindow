@@ -15,11 +15,11 @@ public class MusicTimer {
 
     private Timer mTimer;
 
-    private TimerTask mTimerTask; // ¶¨Ê±Æ÷ÈÎÎñ
+    private TimerTask mTimerTask; // å®šæ—¶å™¨ä»»åŠ¡
 
-    private int mTimerInterval; // ¶¨Ê±Æ÷´¥·¢¼ä¸ôÊ±¼ä(ms)
+    private int mTimerInterval; // å®šæ—¶å™¨è§¦å‘é—´éš”æ—¶é—´(ms)
 
-    private boolean mBStartTimer; // ¶¨Ê±Æ÷ÊÇ·ñÒÑ¿ªÆô
+    private boolean mBStartTimer; // å®šæ—¶å™¨æ˜¯å¦å·²å¼€å¯
 
     public MusicTimer(Handler handler, int eventID) {
         initParam(handler, eventID);
