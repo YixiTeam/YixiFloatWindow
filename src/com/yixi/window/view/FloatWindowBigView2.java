@@ -28,10 +28,15 @@ public class FloatWindowBigView2 extends LinearLayout {
 	private static final String TAG = "FloatWindowBigView2";
     public static int viewWidth;
     public static int viewHeight;
-    private float xInScreen;
-    private float yInScreen;
     private static int statusBarHeight;
     private WindowManager windowManager;
+    private WindowManager.LayoutParams mParams;
+    private float xInScreen;
+    private float yInScreen;
+    private float xDownInScreen;
+    private float yDownInScreen;
+    private float xInView;
+    private float yInView;
     private int mFlag;
 
     RelativeLayout mRelativeLayout;
@@ -131,15 +136,40 @@ public class FloatWindowBigView2 extends LinearLayout {
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+    	
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-            if (!isTouchInBigWindow(event)) {
+        	if (!isTouchInBigWindow(event)) {
                 openSmallWindow();
             }
+            xInView = event.getX();
+            yInView = event.getY();
+
+            xDownInScreen = event.getRawX();
+            yDownInScreen = event.getRawY() - getStatusBarHeight();
+
+            xInScreen = event.getRawX();
+            yInScreen = event.getRawY() - getStatusBarHeight();
+            break;
+        case MotionEvent.ACTION_MOVE:
+            xInScreen = event.getRawX();
+            yInScreen = event.getRawY() - getStatusBarHeight();
+            updateViewPosition();
+            break;
+        case MotionEvent.ACTION_UP:
+
+            int screenWidth = windowManager.getDefaultDisplay().getWidth();
+            mParams.x = (int) (xInScreen - xInView);
+            mParams.y = (int) (yInScreen - yInView);
+            if (screenWidth / 2 >= (mParams.x + viewWidth)) {
+                mParams.x = 0;
+            } else {
+                mParams.x = screenWidth;
+            }
+            windowManager.updateViewLayout(this, mParams);
             break;
         }
         return true;
-
     }
 
     @Override
@@ -227,6 +257,17 @@ public class FloatWindowBigView2 extends LinearLayout {
         rotation.setAnimationListener(new DisplayNextView(tag,view));
 
         layout.startAnimation(rotation);
+    }
+    
+    public void setParams(WindowManager.LayoutParams params) {
+        mParams = params;
+    }
+
+    private void updateViewPosition() {
+        mParams.x = (int) (xInScreen - xInView);
+        mParams.y = (int) (yInScreen - yInView);
+        Log.d(TAG, "--------updateViewPosition---mParams.x = " + mParams.x + "----mParams.y = " + mParams.y);
+        windowManager.updateViewLayout(this, mParams);
     }
 
     private final class DisplayNextView implements Animation.AnimationListener {

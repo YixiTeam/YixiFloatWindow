@@ -30,7 +30,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,10 +53,15 @@ public class FloatWindowBigView extends LinearLayout {
 	private static final String TAG = "FloatWindowBigView";
     public static int viewWidth;
     public static int viewHeight;
-    private float xInScreen;
-    private float yInScreen;
     private static int statusBarHeight;
     private WindowManager windowManager;
+    private WindowManager.LayoutParams mParams;
+    private float xInScreen;
+    private float yInScreen;
+    private float xDownInScreen;
+    private float yDownInScreen;
+    private float xInView;
+    private float yInView;
 
     RelativeLayout mRelativeLayout;
     FrameLayout mFrameLayout1;
@@ -199,6 +207,7 @@ public class FloatWindowBigView extends LinearLayout {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------shotBtn------Click!!-----");
 				shotscreen();
+				openSmallWindow();
 			}
 		});
 
@@ -436,6 +445,8 @@ public class FloatWindowBigView extends LinearLayout {
         	e.printStackTrace();
         }
         
+        Toast.makeText(mContext, "Screen have saved in app file!", Toast.LENGTH_LONG).show();
+        
     }
     
     /**
@@ -517,22 +528,49 @@ public class FloatWindowBigView extends LinearLayout {
             }
         }
 
+        Log.d(TAG, "-----------------------RunningAppProcessInfo.IMPORTANCE_VISIBLE = " + RunningAppProcessInfo.IMPORTANCE_VISIBLE);
         Toast.makeText(mContext, "I have clear " + count + " process for your phone", Toast.LENGTH_LONG).show();
     }
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+    	
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-            if (!isTouchInBigWindow(event)) {
+        	if (!isTouchInBigWindow(event)) {
                 openSmallWindow();
             }
+            xInView = event.getX();
+            yInView = event.getY();
+
+            xDownInScreen = event.getRawX();
+            yDownInScreen = event.getRawY() - getStatusBarHeight();
+
+            xInScreen = event.getRawX();
+            yInScreen = event.getRawY() - getStatusBarHeight();
+            break;
+        case MotionEvent.ACTION_MOVE:
+            xInScreen = event.getRawX();
+            yInScreen = event.getRawY() - getStatusBarHeight();
+            updateViewPosition();
+            break;
+        case MotionEvent.ACTION_UP:
+
+            int screenWidth = windowManager.getDefaultDisplay().getWidth();
+            mParams.x = (int) (xInScreen - xInView);
+            mParams.y = (int) (yInScreen - yInView);
+            if (screenWidth / 2 >= (mParams.x + viewWidth)) {
+                mParams.x = 0;
+            } else {
+                mParams.x = screenWidth;
+            }
+            windowManager.updateViewLayout(this, mParams);
+            // removeLauncherWindow();
             break;
         }
         return true;
-
     }
-
+    
     @Override
     public boolean dispatchKeyEvent(KeyEvent event)  {
         super.dispatchKeyEvent(event);
@@ -661,5 +699,18 @@ public class FloatWindowBigView extends LinearLayout {
 //        }
         //end
     }
+    
+    public void setParams(WindowManager.LayoutParams params) {
+        mParams = params;
+    }
+
+    private void updateViewPosition() {
+        mParams.x = (int) (xInScreen - xInView);
+        mParams.y = (int) (yInScreen - yInView);
+        Log.d(TAG, "--------updateViewPosition---mParams.x = " + mParams.x + "----mParams.y = " + mParams.y);
+        windowManager.updateViewLayout(this, mParams);
+    }
+    
+
 
 }

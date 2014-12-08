@@ -89,6 +89,7 @@ public class FloatWindowManager {
                 bigWindowParams.height = FloatWindowBigView.viewHeight;
             }
             Log.d("ljz", "----FloatWindowManager---createBigWindow------addView = ");
+            bigWindow.setParams(bigWindowParams);
             windowManager.addView(bigWindow, bigWindowParams);
         }
         ScaleToNormal(bigWindow);
@@ -124,6 +125,7 @@ public class FloatWindowManager {
                 bigWindowParams.height = FloatWindowBigView.viewHeight;
             }
             Log.d("ljz", "----FloatWindowManager---createBigWindow------addView = ");
+            bigWindow2.setParams(bigWindowParams);
             windowManager.addView(bigWindow2, bigWindowParams);
         }
         ScaleToNormal(bigWindow2);
