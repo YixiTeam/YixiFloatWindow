@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.animation.ObjectAnimator;
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -36,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.ServiceManager;
 import android.os.IPowerManager;
 import android.os.IPowerManager.Stub;
@@ -325,6 +327,8 @@ public class FloatWindowBigView extends LinearLayout {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------cleanImageview------Click!!-----");
 				removeRecentTask();
+				clearMemory();
+				openSmallWindow();
 			}
 		});
 		setImageview.setOnClickListener(new OnClickListener() {
@@ -482,6 +486,39 @@ public class FloatWindowBigView extends LinearLayout {
 //    		Log.d(TAG, "-------removeRecentTask----2---i = " + i + "--- " + recentTasks.get(i));
     	}
     	
+    }
+    
+    private void clearMemory() {
+    	ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<RunningAppProcessInfo> infoList = am.getRunningAppProcesses();
+        List<ActivityManager.RunningServiceInfo> serviceInfos = am.getRunningServices(100);
+
+        int count = 0;
+        if (infoList != null) {
+            for (int i = 0; i < infoList.size(); ++i) {
+                RunningAppProcessInfo appProcessInfo = infoList.get(i);
+                Log.d(TAG, "process name : " + appProcessInfo.processName);
+
+                Log.d(TAG, "importance : " + appProcessInfo.importance);
+
+                if (appProcessInfo.importance > RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
+                    String[] pkgList = appProcessInfo.pkgList;
+                    for (int j = 0; j < pkgList.length; ++j) {
+                    	Log.d(TAG, "---------clearMemory-------package name : " + pkgList[j]);
+                        if ("com.yixi.window".equals(pkgList[j])) {
+                        	Log.d(TAG, "I will do nothing for this app, package name : " + pkgList[j]);
+                        } else {
+                        	Log.d(TAG, "It will be killed, package name : " + pkgList[j]);
+                        	am.killBackgroundProcesses(pkgList[j]);
+                            count++;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        Toast.makeText(mContext, "I have clear " + count + " process for your phone", Toast.LENGTH_LONG).show();
     }
     
     @Override
