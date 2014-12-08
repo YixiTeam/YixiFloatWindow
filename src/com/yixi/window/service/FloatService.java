@@ -40,30 +40,6 @@ public class FloatService extends Service {
     private boolean isshow=false;
     private SharedPreferences sharedata;
     private SharedPreferences.Editor editordata;
-    private final IService.Stub mBinder = new IService.Stub() {
-        @Override
-        public void stopCalorie() throws RemoteException {
-            stopStep();
-        }
-
-        @Override
-        public void startCalorie() throws RemoteException {
-            startStep();
-        }
-
-        @Override
-        public void resetData(float sensitivity, int interval)
-                throws RemoteException {
-            AppData.sensitivity = sensitivity;
-            AppData.interval = interval;
-        }
-
-        @Override
-        public void saveData() throws RemoteException {
-            saveCacheData();
-        }
-
-    };
 
     @Override
     public void onCreate() {
@@ -160,7 +136,7 @@ public class FloatService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return mBinder;
+        return null;
     }
 
     @Override
