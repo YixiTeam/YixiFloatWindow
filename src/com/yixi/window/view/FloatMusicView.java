@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.yixi.window.R;
-import com.yixi.window.data.MusicData;
+import com.yixi.window.data.IMusicData;
 import com.yixi.window.data.MusicPlayState;
 import com.yixi.window.data.MusicPlayer;
 import com.yixi.window.utils.MusicTimer;
@@ -62,7 +62,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     private MusicPlayStateBrocast mPlayStateBrocast;
     private Context mContext;
 
-    private List<MusicData> mMusicList;
+    private List<IMusicData> mMusicList;
     private int mCurMusicTotalTime;
     private MusicTimer mMusicTimer;
     private Handler mHandler;
@@ -237,7 +237,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         mServiceManager.setOnServiceConnectComplete(this);
         mServiceManager.connectService();
 
-        mMusicList = new ArrayList<MusicData>();
+        mMusicList = new ArrayList<IMusicData>();
         mHandler = new Handler() {
 
             @Override
@@ -273,11 +273,11 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     }
 
     public void transPlayStateEvent(Intent intent) {
-        MusicData data = new MusicData();
+        IMusicData data = new IMusicData();
         int playState = intent.getIntExtra(MusicPlayState.PLAY_STATE_NAME, -1);
-        Bundle bundle = intent.getBundleExtra(MusicData.KEY_MUSIC_DATA);
+        Bundle bundle = intent.getBundleExtra(IMusicData.KEY_MUSIC_DATA);
         if (bundle != null) {
-            data = bundle.getParcelable(MusicData.KEY_MUSIC_DATA);
+            data = bundle.getParcelable(IMusicData.KEY_MUSIC_DATA);
         }
         int playIndex = intent.getIntExtra(MusicPlayState.PLAY_MUSIC_INDEX, -1);
 

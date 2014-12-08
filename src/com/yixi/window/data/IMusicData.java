@@ -12,7 +12,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 
-public class MusicData implements Parcelable {
+public class IMusicData implements Parcelable {
 
     public final static String KEY_MUSIC_DATA = "MusicData";
 
@@ -30,7 +30,7 @@ public class MusicData implements Parcelable {
     public int mMusicId;
     public int mAritstId;
 
-    public MusicData() {
+    public IMusicData() {
         mMusicName = "";
         mMusicTime = 0;
         mMusicPath = "";
@@ -60,12 +60,12 @@ public class MusicData implements Parcelable {
         dest.writeBundle(mBundle);
     }
 
-    public static final Parcelable.Creator<MusicData> CREATOR = new Parcelable.Creator<MusicData>() {
+    public static final Parcelable.Creator<IMusicData> CREATOR = new Parcelable.Creator<IMusicData>() {
 
         @Override
-        public MusicData createFromParcel(Parcel source) {
+        public IMusicData createFromParcel(Parcel source) {
             // TODO Auto-generated method stub
-            MusicData Data = new MusicData();
+            IMusicData Data = new IMusicData();
 
             Bundle mBundle = new Bundle();
             mBundle = source.readBundle();
@@ -80,9 +80,9 @@ public class MusicData implements Parcelable {
         }
 
         @Override
-        public MusicData[] newArray(int size) {
+        public IMusicData[] newArray(int size) {
             // TODO Auto-generated method stub
-            return new MusicData[size];
+            return new IMusicData[size];
         }
 
     };

@@ -17,14 +17,14 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 
 import com.yixi.window.R;
-import com.yixi.window.data.MusicData;
+import com.yixi.window.data.IMusicData;
 
 public class MusicUtils {
 
     private static final Uri mAlbumArtUri = Uri
             .parse("content://media/external/audio/albumart");
-    public static List<MusicData> getMusicFileList(Context context) {
-        List<MusicData> list = new ArrayList<MusicData>();
+    public static List<IMusicData> getMusicFileList(Context context) {
+        List<IMusicData> list = new ArrayList<IMusicData>();
 
         String[] projection = new String[] { MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DURATION,
@@ -51,7 +51,7 @@ public class MusicUtils {
             int fileNum = cursor.getCount();
             for (int counter = 0; counter < fileNum; counter++) {
 
-                MusicData data = new MusicData();
+                IMusicData data = new IMusicData();
                 data.mMusicName = cursor.getString(colNameIndex);
                 data.mMusicTime = cursor.getInt(colTimeIndex);
                 data.mMusicPath = cursor.getString(colPathIndex);

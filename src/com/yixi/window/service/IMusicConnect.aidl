@@ -1,11 +1,11 @@
 package com.yixi.window.service;
 
-import com.yixi.window.data.MusicData;
-interface MusicConnect {
+import com.yixi.window.data.IMusicData;
+interface IMusicConnect {
 
-   void refreshMusicList(in List<MusicData> musicFileList);
+   void refreshMusicList(in List<IMusicData> musicFileList);
    
-   void getFileList(out List<MusicData> musicFileList);
+   void getFileList(out List<IMusicData> musicFileList);
    
    boolean rePlay();
    

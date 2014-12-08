@@ -3,8 +3,8 @@ package com.yixi.window.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yixi.window.service.MusicConnect;
-import com.yixi.window.data.MusicData;
+import com.yixi.window.service.IMusicConnect;
+import com.yixi.window.data.IMusicData;
 import com.yixi.window.data.MusicPlayState;
 
 import android.content.ComponentName;
@@ -21,13 +21,13 @@ public class ServiceManager {
 
     private final static String TAG = "ServiceManager";
 
-    private final static String SERVICE_NAME = "com.genius.service.musicservices";
+    private final static String SERVICE_NAME = "com.yixi.window.service.musicservices";
 
     private Boolean mConnectComplete;
 
     private ServiceConnection mServiceConnection;
 
-    private MusicConnect mMusicConnect;
+    private IMusicConnect mMusicConnect;
 
     private IOnServiceConnectComplete mIOnServiceConnectComplete;
 
@@ -53,7 +53,7 @@ public class ServiceManager {
                 // TODO Auto-generated method stub
                 Log.i(TAG, "onServiceConnected");
 
-                mMusicConnect = MusicConnect.Stub.asInterface(service);
+                mMusicConnect = IMusicConnect.Stub.asInterface(service);
                 if (mMusicConnect != null) {
                     if (mIOnServiceConnectComplete != null) {
                         mIOnServiceConnectComplete.OnServiceConnectComplete();
@@ -134,7 +134,7 @@ public class ServiceManager {
         mIOnServiceConnectComplete = IServiceConnect;
     }
 
-    public void refreshMusicList(List<MusicData> FileList) {
+    public void refreshMusicList(List<IMusicData> FileList) {
         if (mMusicConnect != null) {
             try {
                 mMusicConnect.refreshMusicList(FileList);
@@ -146,8 +146,8 @@ public class ServiceManager {
 
     }
 
-    public List<MusicData> getFileList() {
-        List<MusicData> musicFileList = new ArrayList<MusicData>();
+    public List<IMusicData> getFileList() {
+        List<IMusicData> musicFileList = new ArrayList<IMusicData>();
         try {
             Log.i(TAG, "getFileList	begin...");
             mMusicConnect.getFileList(musicFileList);

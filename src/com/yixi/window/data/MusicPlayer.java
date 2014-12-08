@@ -21,7 +21,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
     private MediaPlayer mMediaPlayer;
 
-    private List<MusicData> mMusicFileList;
+    private List<IMusicData> mMusicFileList;
 
     private int mCurPlayIndex;
 
@@ -38,7 +38,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
         mMediaPlayer.setOnErrorListener(this);
 
-        mMusicFileList = new ArrayList<MusicData>();
+        mMusicFileList = new ArrayList<IMusicData>();
 
         mCurPlayIndex = -1;
 
@@ -61,7 +61,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         mPlayState = MusicPlayState.MPS_NOFILE;
     }
 
-    public void refreshMusicList(List<MusicData> FileList) {
+    public void refreshMusicList(List<IMusicData> FileList) {
 
         if (FileList == null) {
             mMusicFileList.clear();
@@ -97,7 +97,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         }
     }
 
-    public List<MusicData> getFileList() {
+    public List<IMusicData> getFileList() {
         Log.i(TAG, "getFileList	mMusicFileList.size = " + mMusicFileList.size());
         return mMusicFileList;
     }
@@ -269,9 +269,13 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
         String path = mMusicFileList.get(index).mMusicPath;
         try {
+        	Log.d("apple", ">>>>>mMediaPlayer 111 ");
             mMediaPlayer.setDataSource(path);
+            Log.d("apple", ">>>>>mMediaPlayer 222 ");
             mMediaPlayer.prepare();
+            Log.d("apple", ">>>>>mMediaPlayer 333 ");
             mPlayState = MusicPlayState.MPS_PREPARE;
+            Log.d("apple", ">>>>>mMediaPlayer 444 ");
             Log.i("apple", "mMediaPlayer.prepare	path = " + path);
             sendPlayStateBrocast();
 
@@ -301,10 +305,10 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
             if (mPlayState != MusicPlayState.MPS_NOFILE) {
                 Bundle bundle = new Bundle();
-                MusicData data = mMusicFileList.get(mCurPlayIndex);
+                IMusicData data = mMusicFileList.get(mCurPlayIndex);
 
-                bundle.putParcelable(MusicData.KEY_MUSIC_DATA, data);
-                intent.putExtra(MusicData.KEY_MUSIC_DATA, bundle);
+                bundle.putParcelable(IMusicData.KEY_MUSIC_DATA, data);
+                intent.putExtra(IMusicData.KEY_MUSIC_DATA, bundle);
             }
 
             mContext.sendBroadcast(intent);

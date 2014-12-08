@@ -2,9 +2,9 @@ package com.yixi.window.service;
 
 import java.util.List;
 
-import com.yixi.window.service.MusicConnect;
-import com.yixi.window.service.MusicConnect.Stub;
-import com.yixi.window.data.MusicData;
+import com.yixi.window.service.IMusicConnect;
+import com.yixi.window.service.IMusicConnect.Stub;
+import com.yixi.window.data.IMusicData;
 import com.yixi.window.data.MusicPlayer;
 
 import android.app.Service;
@@ -58,26 +58,25 @@ public class MusicService extends Service {
 
     }
 
-    private MusicConnect.Stub mBinder = new Stub() {
+    private IMusicConnect.Stub mBinder = new Stub() {
 
         @Override
-        public void refreshMusicList(List<MusicData> musicFileList)
+        public void refreshMusicList(List<IMusicData> musicFileList)
                 throws RemoteException {
             // TODO Auto-generated method stub
             mMusicPlayer.refreshMusicList(musicFileList);
         }
 
         @Override
-        public void getFileList(List<MusicData> musicFileList)
+        public void getFileList(List<IMusicData> musicFileList)
                 throws RemoteException {
             // TODO Auto-generated method stub
-            List<MusicData> tmp = mMusicPlayer.getFileList();
+            List<IMusicData> tmp = mMusicPlayer.getFileList();
             int count = tmp.size();
             for (int i = 0; i < count; i++) {
                 musicFileList.add(tmp.get(i));
             }
         }
-
         @Override
         public int getCurPosition() throws RemoteException {
             // TODO Auto-generated method stub
