@@ -7,12 +7,10 @@ import android.os.PowerManager;
 import com.ab.activity.AbActivity;
 import com.ab.util.AbAppUtil;
 import com.yixi.window.service.FloatService;
-import com.yixi.window.service.IService;
 
 public class MainActivity extends AbActivity {
 
-    //private String TAG = "ss";
-    private IService mRemoteService;
+    private static final String TAG = "MainActivity";
     private Intent myService = null;
     private PowerManager.WakeLock wakeLock = null;
 
