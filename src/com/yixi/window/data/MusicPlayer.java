@@ -21,7 +21,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
     private MediaPlayer mMediaPlayer;
 
-    private List<IMusicData> mMusicFileList;
+    private List<IMediaData> mMusicFileList;
 
     private int mCurPlayIndex;
 
@@ -38,11 +38,11 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
         mMediaPlayer.setOnErrorListener(this);
 
-        mMusicFileList = new ArrayList<IMusicData>();
+        mMusicFileList = new ArrayList<IMediaData>();
 
         mCurPlayIndex = -1;
 
-        mPlayState = MusicPlayState.MPS_NOFILE;
+        mPlayState = MediaPlayState.MPS_NOFILE;
 
     }
 
@@ -58,14 +58,14 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         mMediaPlayer.reset();
         mMusicFileList.clear();
         mCurPlayIndex = -1;
-        mPlayState = MusicPlayState.MPS_NOFILE;
+        mPlayState = MediaPlayState.MPS_NOFILE;
     }
 
-    public void refreshMusicList(List<IMusicData> FileList) {
+    public void refreshMusicList(List<IMediaData> FileList) {
 
         if (FileList == null) {
             mMusicFileList.clear();
-            mPlayState = MusicPlayState.MPS_NOFILE;
+            mPlayState = MediaPlayState.MPS_NOFILE;
             mCurPlayIndex = -1;
             return;
         }
@@ -73,31 +73,31 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         mMusicFileList = FileList;
 
         if (mMusicFileList.size() == 0) {
-            mPlayState = MusicPlayState.MPS_NOFILE;
+            mPlayState = MediaPlayState.MPS_NOFILE;
             mCurPlayIndex = -1;
             return;
         }
 
         switch (mPlayState) {
-        case MusicPlayState.MPS_NOFILE:
+        case MediaPlayState.MPS_NOFILE:
             prepare(0);
             break;
-        case MusicPlayState.MPS_INVALID:
+        case MediaPlayState.MPS_INVALID:
             prepare(0);
             break;
-        case MusicPlayState.MPS_PREPARE:
+        case MediaPlayState.MPS_PREPARE:
             prepare(0);
             break;
-        case MusicPlayState.MPS_PLAYING:
+        case MediaPlayState.MPS_PLAYING:
             break;
-        case MusicPlayState.MPS_PAUSE:
+        case MediaPlayState.MPS_PAUSE:
             break;
         default:
             break;
         }
     }
 
-    public List<IMusicData> getFileList() {
+    public List<IMediaData> getFileList() {
         Log.i(TAG, "getFileList	mMusicFileList.size = " + mMusicFileList.size());
         return mMusicFileList;
     }
@@ -108,27 +108,27 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
     public boolean replay() {
 
-        if (mPlayState == MusicPlayState.MPS_NOFILE
-                || mPlayState == MusicPlayState.MPS_INVALID) {
+        if (mPlayState == MediaPlayState.MPS_NOFILE
+                || mPlayState == MediaPlayState.MPS_INVALID) {
             return false;
         }
 
         mMediaPlayer.start();
-        mPlayState = MusicPlayState.MPS_PLAYING;
+        mPlayState = MediaPlayState.MPS_PLAYING;
         sendPlayStateBrocast();
 
         return true;
     }
 
     public boolean play(int position) {
-        if (mPlayState == MusicPlayState.MPS_NOFILE) {
+        if (mPlayState == MediaPlayState.MPS_NOFILE) {
             return false;
         }
 
         if (mCurPlayIndex == position) {
             if (mMediaPlayer.isPlaying() == false) {
                 mMediaPlayer.start();
-                mPlayState = MusicPlayState.MPS_PLAYING;
+                mPlayState = MediaPlayState.MPS_PLAYING;
                 sendPlayStateBrocast();
             }
 
@@ -145,20 +145,20 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
     }
 
     public boolean pause() {
-        if (mPlayState != MusicPlayState.MPS_PLAYING) {
+        if (mPlayState != MediaPlayState.MPS_PLAYING) {
             return false;
         }
 
         mMediaPlayer.pause();
-        mPlayState = MusicPlayState.MPS_PAUSE;
+        mPlayState = MediaPlayState.MPS_PAUSE;
         sendPlayStateBrocast();
 
         return true;
     }
 
     public boolean stop() {
-        if (mPlayState != MusicPlayState.MPS_PLAYING
-                && mPlayState != MusicPlayState.MPS_PAUSE) {
+        if (mPlayState != MediaPlayState.MPS_PLAYING
+                && mPlayState != MediaPlayState.MPS_PAUSE) {
             return false;
         }
 
@@ -167,7 +167,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
     }
 
     public boolean playNext() {
-        if (mPlayState == MusicPlayState.MPS_NOFILE) {
+        if (mPlayState == MediaPlayState.MPS_NOFILE) {
             return false;
         }
 
@@ -182,7 +182,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
     }
 
     public boolean playPre() {
-        if (mPlayState == MusicPlayState.MPS_NOFILE) {
+        if (mPlayState == MediaPlayState.MPS_NOFILE) {
             return false;
         }
 
@@ -197,8 +197,8 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
     }
 
     public boolean seekTo(int rate) {
-        if (mPlayState == MusicPlayState.MPS_NOFILE
-                || mPlayState == MusicPlayState.MPS_INVALID) {
+        if (mPlayState == MediaPlayState.MPS_NOFILE
+                || mPlayState == MediaPlayState.MPS_INVALID) {
             return false;
         }
 
@@ -211,8 +211,8 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
     }
 
     public int getCurPosition() {
-        if (mPlayState == MusicPlayState.MPS_PLAYING
-                || mPlayState == MusicPlayState.MPS_PAUSE) {
+        if (mPlayState == MediaPlayState.MPS_PLAYING
+                || mPlayState == MediaPlayState.MPS_PAUSE) {
             return mMediaPlayer.getCurrentPosition();
         }
 
@@ -221,8 +221,8 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
     public int getDuration() {
 
-        if (mPlayState == MusicPlayState.MPS_NOFILE
-                || mPlayState == MusicPlayState.MPS_INVALID) {
+        if (mPlayState == MediaPlayState.MPS_NOFILE
+                || mPlayState == MediaPlayState.MPS_INVALID) {
             return 0;
         }
 
@@ -267,14 +267,14 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         mCurPlayIndex = index;
         mMediaPlayer.reset();
 
-        String path = mMusicFileList.get(index).mMusicPath;
+        String path = mMusicFileList.get(index).mMediaPath;
         try {
         	Log.d("apple", ">>>>>mMediaPlayer 111 ");
             mMediaPlayer.setDataSource(path);
             Log.d("apple", ">>>>>mMediaPlayer 222 ");
             mMediaPlayer.prepare();
             Log.d("apple", ">>>>>mMediaPlayer 333 ");
-            mPlayState = MusicPlayState.MPS_PREPARE;
+            mPlayState = MediaPlayState.MPS_PREPARE;
             Log.d("apple", ">>>>>mMediaPlayer 444 ");
             Log.i("apple", "mMediaPlayer.prepare	path = " + path);
             sendPlayStateBrocast();
@@ -282,7 +282,7 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            mPlayState = MusicPlayState.MPS_INVALID;
+            mPlayState = MediaPlayState.MPS_INVALID;
             sendPlayStateBrocast();
             return false;
         }
@@ -300,15 +300,15 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
         if (mContext != null) {
             Intent intent = new Intent(BROCAST_NAME);
-            intent.putExtra(MusicPlayState.PLAY_STATE_NAME, mPlayState);
-            intent.putExtra(MusicPlayState.PLAY_MUSIC_INDEX, mCurPlayIndex);
+            intent.putExtra(MediaPlayState.PLAY_STATE_NAME, mPlayState);
+            intent.putExtra(MediaPlayState.PLAY_MEDIA_INDEX, mCurPlayIndex);
 
-            if (mPlayState != MusicPlayState.MPS_NOFILE) {
+            if (mPlayState != MediaPlayState.MPS_NOFILE) {
                 Bundle bundle = new Bundle();
-                IMusicData data = mMusicFileList.get(mCurPlayIndex);
+                IMediaData data = mMusicFileList.get(mCurPlayIndex);
 
-                bundle.putParcelable(IMusicData.KEY_MUSIC_DATA, data);
-                intent.putExtra(IMusicData.KEY_MUSIC_DATA, bundle);
+                bundle.putParcelable(IMediaData.KEY_MEDIA_DATA, data);
+                intent.putExtra(IMediaData.KEY_MEDIA_DATA, bundle);
             }
 
             mContext.sendBroadcast(intent);

@@ -1,11 +1,11 @@
 package com.yixi.window.service;
 
-import com.yixi.window.data.IMusicData;
-interface IMusicConnect {
+import com.yixi.window.data.IMediaData;
+interface IMediaConnect {
 
-   void refreshMusicList(in List<IMusicData> musicFileList);
+   void refreshMusicList(in List<IMediaData> mediaFileList);
    
-   void getFileList(out List<IMusicData> musicFileList);
+   void getFileList(out List<IMediaData> mediaFileList);
    
    boolean rePlay();
    

@@ -24,11 +24,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <TextView 
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/hello_world"
-                android:textSize="20sp" />
+           <com.yixi.window.view.FloatMovieView
+            android:id="@+id/movie_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </com.yixi.window.view.FloatMovieView>
         </LinearLayout>
     </FrameLayout>
 

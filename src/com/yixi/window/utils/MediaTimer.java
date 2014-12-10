@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-public class MusicTimer {
+public class MediaTimer {
 
     private int mEventID;
 
@@ -15,13 +15,13 @@ public class MusicTimer {
 
     private Timer mTimer;
 
-    private TimerTask mTimerTask; // 定时器任务
+    private TimerTask mTimerTask; // 定时器任�?
 
-    private int mTimerInterval; // 定时器触发间隔时间(ms)
+    private int mTimerInterval; // 定时器触发间隔时�?(ms)
 
-    private boolean mBStartTimer; // 定时器是否已开启
+    private boolean mBStartTimer; // 定时器是否已�?�?
 
-    public MusicTimer(Handler handler, int eventID) {
+    public MediaTimer(Handler handler, int eventID) {
         initParam(handler, eventID);
     }
 

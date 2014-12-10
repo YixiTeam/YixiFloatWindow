@@ -3,9 +3,9 @@ package com.yixi.window.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yixi.window.service.IMusicConnect;
-import com.yixi.window.data.IMusicData;
-import com.yixi.window.data.MusicPlayState;
+import com.yixi.window.service.IMediaConnect;
+import com.yixi.window.data.IMediaData;
+import com.yixi.window.data.MediaPlayState;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,13 +21,13 @@ public class ServiceManager {
 
     private final static String TAG = "ServiceManager";
 
-    private final static String SERVICE_NAME = "com.yixi.window.service.musicservices";
+    private final static String SERVICE_NAME = "com.yixi.window.service.mediaservices";
 
     private Boolean mConnectComplete;
 
     private ServiceConnection mServiceConnection;
 
-    private IMusicConnect mMusicConnect;
+    private IMediaConnect mMediaConnect;
 
     private IOnServiceConnectComplete mIOnServiceConnectComplete;
 
@@ -39,6 +39,7 @@ public class ServiceManager {
     }
 
     private void defaultParam() {
+        Log.d(TAG, ">>>>defaultParam ");
         mServiceConnection = new ServiceConnection() {
 
             @Override
@@ -53,8 +54,8 @@ public class ServiceManager {
                 // TODO Auto-generated method stub
                 Log.i(TAG, "onServiceConnected");
 
-                mMusicConnect = IMusicConnect.Stub.asInterface(service);
-                if (mMusicConnect != null) {
+                mMediaConnect = IMediaConnect.Stub.asInterface(service);
+                if (mMediaConnect != null) {
                     if (mIOnServiceConnectComplete != null) {
                         mIOnServiceConnectComplete.OnServiceConnectComplete();
                     }
@@ -63,7 +64,7 @@ public class ServiceManager {
         };
 
         mConnectComplete = false;
-        mMusicConnect = null;
+        mMediaConnect = null;
     }
 
     public boolean connectService() {
@@ -93,7 +94,7 @@ public class ServiceManager {
         if (mContext != null) {
             Log.i(TAG, "begin to disconnectService");
             mContext.unbindService(mServiceConnection);
-            mMusicConnect = null;
+            mMediaConnect = null;
             mConnectComplete = false;
             return true;
         }
@@ -104,7 +105,7 @@ public class ServiceManager {
     public void exit() {
         if (mConnectComplete) {
             try {
-                mMusicConnect.exit();
+                mMediaConnect.exit();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -113,7 +114,7 @@ public class ServiceManager {
             Intent intent = new Intent(SERVICE_NAME);
             mContext.unbindService(mServiceConnection);
             mContext.stopService(intent);
-            mMusicConnect = null;
+            mMediaConnect = null;
             mConnectComplete = false;
 
         }
@@ -122,7 +123,7 @@ public class ServiceManager {
     public void reset() {
         if (mConnectComplete) {
             try {
-                mMusicConnect.exit();
+                mMediaConnect.exit();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
             }
@@ -134,10 +135,10 @@ public class ServiceManager {
         mIOnServiceConnectComplete = IServiceConnect;
     }
 
-    public void refreshMusicList(List<IMusicData> FileList) {
-        if (mMusicConnect != null) {
+    public void refreshMusicList(List<IMediaData> FileList) {
+        if (mMediaConnect != null) {
             try {
-                mMusicConnect.refreshMusicList(FileList);
+                mMediaConnect.refreshMusicList(FileList);
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -146,11 +147,11 @@ public class ServiceManager {
 
     }
 
-    public List<IMusicData> getFileList() {
-        List<IMusicData> musicFileList = new ArrayList<IMusicData>();
+    public List<IMediaData> getFileList() {
+        List<IMediaData> musicFileList = new ArrayList<IMediaData>();
         try {
             Log.i(TAG, "getFileList	begin...");
-            mMusicConnect.getFileList(musicFileList);
+            mMediaConnect.getFileList(musicFileList);
         } catch (RemoteException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -160,10 +161,10 @@ public class ServiceManager {
     }
 
     public boolean rePlay() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                Log.i(TAG, "mMusicConnect.rePlay()");
-                return mMusicConnect.rePlay();
+                Log.i(TAG, "mMediaConnect.rePlay()");
+                return mMediaConnect.rePlay();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -174,10 +175,10 @@ public class ServiceManager {
     }
 
     public boolean play(int position) {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                Log.i(TAG, "mMusicConnect.play = " + position);
-                return mMusicConnect.play(position);
+                Log.i(TAG, "mMediaConnect.play = " + position);
+                return mMediaConnect.play(position);
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -189,9 +190,9 @@ public class ServiceManager {
     }
 
     public boolean pause() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.pause();
+                return mMediaConnect.pause();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -202,9 +203,9 @@ public class ServiceManager {
     }
 
     public boolean stop() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.stop();
+                return mMediaConnect.stop();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -215,9 +216,9 @@ public class ServiceManager {
     }
 
     public boolean playNext() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.playNext();
+                return mMediaConnect.playNext();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -229,9 +230,9 @@ public class ServiceManager {
 
     public boolean playPre() {
 
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.playPre();
+                return mMediaConnect.playPre();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -242,9 +243,9 @@ public class ServiceManager {
     }
 
     public boolean seekTo(int rate) {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.seekTo(rate);
+                return mMediaConnect.seekTo(rate);
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -255,9 +256,9 @@ public class ServiceManager {
     }
 
     public int getCurPosition() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.getCurPosition();
+                return mMediaConnect.getCurPosition();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -269,9 +270,9 @@ public class ServiceManager {
     }
 
     public int getDuration() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.getDuration();
+                return mMediaConnect.getDuration();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -282,22 +283,22 @@ public class ServiceManager {
     }
 
     public int getPlayState() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                return mMusicConnect.getPlayState();
+                return mMediaConnect.getPlayState();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
 
-        return MusicPlayState.MPS_NOFILE;
+        return MediaPlayState.MPS_NOFILE;
     }
 
     public void sendPlayStateBrocast() {
-        if (mMusicConnect != null) {
+        if (mMediaConnect != null) {
             try {
-                mMusicConnect.sendPlayStateBrocast();
+                mMediaConnect.sendPlayStateBrocast();
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

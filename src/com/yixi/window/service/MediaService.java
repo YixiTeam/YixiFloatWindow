@@ -2,10 +2,9 @@ package com.yixi.window.service;
 
 import java.util.List;
 
-import com.yixi.window.service.IMusicConnect;
-import com.yixi.window.service.IMusicConnect.Stub;
-import com.yixi.window.data.IMusicData;
+import com.yixi.window.data.IMediaData;
 import com.yixi.window.data.MusicPlayer;
+import com.yixi.window.service.IMediaConnect.Stub;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -16,7 +15,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
-public class MusicService extends Service {
+public class MediaService extends Service {
 
     private static final String TAG = "MusicService";
 
@@ -26,7 +25,6 @@ public class MusicService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO Auto-generated method stub
         return mBinder;
     }
 
@@ -58,25 +56,26 @@ public class MusicService extends Service {
 
     }
 
-    private IMusicConnect.Stub mBinder = new Stub() {
+    private IMediaConnect.Stub mBinder = new Stub() {
 
         @Override
-        public void refreshMusicList(List<IMusicData> musicFileList)
+        public void refreshMusicList(List<IMediaData> musicFileList)
                 throws RemoteException {
             // TODO Auto-generated method stub
             mMusicPlayer.refreshMusicList(musicFileList);
         }
 
         @Override
-        public void getFileList(List<IMusicData> musicFileList)
+        public void getFileList(List<IMediaData> musicFileList)
                 throws RemoteException {
             // TODO Auto-generated method stub
-            List<IMusicData> tmp = mMusicPlayer.getFileList();
+            List<IMediaData> tmp = mMusicPlayer.getFileList();
             int count = tmp.size();
             for (int i = 0; i < count; i++) {
                 musicFileList.add(tmp.get(i));
             }
         }
+
         @Override
         public int getCurPosition() throws RemoteException {
             // TODO Auto-generated method stub
