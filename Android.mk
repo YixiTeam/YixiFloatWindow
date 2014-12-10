@@ -13,7 +13,6 @@ LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4 andbase
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := $(call all-java-files-under, src) \
-	src/com/yixi/window/service/IService.aidl \
 	src/com/yixi/window/service/IMediaConnect.aidl
 
 LOCAL_PACKAGE_NAME := MainActivity
