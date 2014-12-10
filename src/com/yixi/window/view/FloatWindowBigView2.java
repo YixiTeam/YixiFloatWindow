@@ -95,16 +95,16 @@ public class FloatWindowBigView2 extends LinearLayout {
         		title.setText(R.string.cal);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;
-        	case R.layout.floatwindowcon:
+        	case R.layout.float_window_contact:
         		title.setText(R.string.contacts);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;
-        	case R.layout.floatwindownote:
+        	case R.layout.float_window_note:
         		title.setText(R.string.note);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		mActionCallBack = (ActionCallBack) findViewById(R.id.note);
         		break;
-        	case R.layout.floatwindowsearch:
+        	case R.layout.float_window_search:
         		title.setText(R.string.search);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;
