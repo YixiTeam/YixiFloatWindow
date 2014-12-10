@@ -186,7 +186,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------musicBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowmusic);
+				openNextWindow(R.layout.float_window_music);
 			}
 		});
         
@@ -196,7 +196,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------videoBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowvideo);
+				openNextWindow(R.layout.float_window_video);
 			}
 		});
         
