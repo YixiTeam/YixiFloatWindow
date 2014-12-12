@@ -41,6 +41,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.ServiceManager;
 import android.os.IPowerManager;
 import android.os.IPowerManager.Stub;
@@ -206,8 +208,17 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------shotBtn------Click!!-----");
-				shotscreen();
 				openSmallWindow();
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						shotscreen();
+					}
+					
+				}, 500);
+				
 			}
 		});
 
@@ -465,8 +476,10 @@ public class FloatWindowBigView extends LinearLayout {
     }
     
     private void saveMyBitmap(String bitName, Bitmap bitmap) throws IOException {
-        File f = new File("/data/data/com.yixi.window/" + bitName + ".png");
-        f.createNewFile();
+    	File f = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/bitName.png");
+    	
+    	boolean isSuc = f.createNewFile();
+    	Log.d(TAG, "-------saveMyBitmap--------isSuc = " + isSuc + "-------create file in ------------f = " + f);
         FileOutputStream fOut = null;
         try {
                 fOut = new FileOutputStream(f);
