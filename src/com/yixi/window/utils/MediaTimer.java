@@ -15,11 +15,11 @@ public class MediaTimer {
 
     private Timer mTimer;
 
-    private TimerTask mTimerTask; // 定时器任�?
+    private TimerTask mTimerTask; 
 
-    private int mTimerInterval; // 定时器触发间隔时�?(ms)
+    private int mTimerInterval; 
 
-    private boolean mBStartTimer; // 定时器是否已�?�?
+    private boolean mBStartTimer; 
 
     public MediaTimer(Handler handler, int eventID) {
         initParam(handler, eventID);
