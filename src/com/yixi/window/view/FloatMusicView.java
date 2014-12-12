@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.yixi.window.R;
-import com.yixi.window.data.IMusicData;
-import com.yixi.window.data.MusicPlayState;
+import com.yixi.window.data.IMediaData;
+import com.yixi.window.data.MediaPlayState;
 import com.yixi.window.data.MusicPlayer;
-import com.yixi.window.utils.MusicTimer;
-import com.yixi.window.utils.MusicUtils;
+import com.yixi.window.utils.MediaTimer;
+import com.yixi.window.utils.MediaUtils;
 import com.yixi.window.view.FloatWindowBigView2.ActionCallBack;
 import com.yixi.window.service.IOnServiceConnectComplete;
 import com.yixi.window.service.ServiceManager;
@@ -62,9 +62,9 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     private MusicPlayStateBrocast mPlayStateBrocast;
     private Context mContext;
 
-    private List<IMusicData> mMusicList;
+    private List<IMediaData> mMusicList;
     private int mCurMusicTotalTime;
-    private MusicTimer mMusicTimer;
+    private MediaTimer mMusicTimer;
     private Handler mHandler;
     private Drawable mMusicImg;
 
@@ -162,14 +162,14 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
 
         int playState = mServiceManager.getPlayState();
         switch (playState) {
-        case MusicPlayState.MPS_NOFILE:
-            mMusicList = MusicUtils.getMusicFileList(mContext);
+        case MediaPlayState.MPS_NOFILE:
+            mMusicList = MediaUtils.getMusicFileList(mContext);
             mServiceManager.refreshMusicList(mMusicList);
             break;
-        case MusicPlayState.MPS_INVALID:
-        case MusicPlayState.MPS_PREPARE:
-        case MusicPlayState.MPS_PLAYING:
-        case MusicPlayState.MPS_PAUSE:
+        case MediaPlayState.MPS_INVALID:
+        case MediaPlayState.MPS_PREPARE:
+        case MediaPlayState.MPS_PLAYING:
+        case MediaPlayState.MPS_PAUSE:
             long time1 = System.currentTimeMillis();
             mMusicList = mServiceManager.getFileList();
             long time2 = System.currentTimeMillis();
@@ -237,7 +237,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         mServiceManager.setOnServiceConnectComplete(this);
         mServiceManager.connectService();
 
-        mMusicList = new ArrayList<IMusicData>();
+        mMusicList = new ArrayList<IMediaData>();
         mHandler = new Handler() {
 
             @Override
@@ -255,7 +255,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
             }
 
         };
-        mMusicTimer = new MusicTimer(mHandler, REFRESH_PROGRESS_EVENT);
+        mMusicTimer = new MediaTimer(mHandler, REFRESH_PROGRESS_EVENT);
 
     }
 
@@ -273,47 +273,47 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     }
 
     public void transPlayStateEvent(Intent intent) {
-        IMusicData data = new IMusicData();
-        int playState = intent.getIntExtra(MusicPlayState.PLAY_STATE_NAME, -1);
-        Bundle bundle = intent.getBundleExtra(IMusicData.KEY_MUSIC_DATA);
+        IMediaData data = new IMediaData();
+        int playState = intent.getIntExtra(MediaPlayState.PLAY_STATE_NAME, -1);
+        Bundle bundle = intent.getBundleExtra(IMediaData.KEY_MEDIA_DATA);
         if (bundle != null) {
-            data = bundle.getParcelable(IMusicData.KEY_MUSIC_DATA);
+            data = bundle.getParcelable(IMediaData.KEY_MEDIA_DATA);
         }
-        int playIndex = intent.getIntExtra(MusicPlayState.PLAY_MUSIC_INDEX, -1);
+        int playIndex = intent.getIntExtra(MediaPlayState.PLAY_MEDIA_INDEX, -1);
 
-        mMusicImg = MusicUtils.getArtworkFromFile(
-                mContext, data.mMusicId, data.mAritstId);
+        mMusicImg = MediaUtils.getArtworkFromFile(
+                mContext, data.mMediaId, data.mAritstId);
         switch (playState) {
-        case MusicPlayState.MPS_INVALID:
+        case MediaPlayState.MPS_INVALID:
             mMusicTimer.stopTimer();
-            setPlayInfo(0, data.mMusicTime, data.mMusicName, true);
+            setPlayInfo(0, data.mMediaTime, data.mMediaName, true);
             showPlay(true);
             break;
-        case MusicPlayState.MPS_PREPARE:
+        case MediaPlayState.MPS_PREPARE:
             mMusicTimer.stopTimer();
-            mCurMusicTotalTime = data.mMusicTime;
+            mCurMusicTotalTime = data.mMediaTime;
             if (mCurMusicTotalTime == 0) {
                 mCurMusicTotalTime = mServiceManager.getDuration();
             }
-            setPlayInfo(0, data.mMusicTime, data.mMusicName, true);
+            setPlayInfo(0, data.mMediaTime, data.mMediaName, true);
             showPlay(true);
             break;
-        case MusicPlayState.MPS_PLAYING:
+        case MediaPlayState.MPS_PLAYING:
             mMusicTimer.startTimer();
             if (mCurMusicTotalTime == 0) {
                 mCurMusicTotalTime = mServiceManager.getDuration();
             }
-            setPlayInfo(mServiceManager.getCurPosition(), data.mMusicTime,
-                    data.mMusicName, true);
+            setPlayInfo(mServiceManager.getCurPosition(), data.mMediaTime,
+                    data.mMediaName, true);
             showPlay(false);
             break;
-        case MusicPlayState.MPS_PAUSE:
+        case MediaPlayState.MPS_PAUSE:
             mMusicTimer.stopTimer();
             if (mCurMusicTotalTime == 0) {
                 mCurMusicTotalTime = mServiceManager.getDuration();
             }
-            setPlayInfo(mServiceManager.getCurPosition(), data.mMusicTime,
-                    data.mMusicName, true);
+            setPlayInfo(mServiceManager.getCurPosition(), data.mMediaTime,
+                    data.mMediaName, true);
             showPlay(true);
             break;
         default:

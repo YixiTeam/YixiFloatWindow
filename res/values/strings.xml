@@ -15,5 +15,14 @@
     <string name="search">Search</string>
     <string name="clean_histroy">clean histroy</string>
     <string name="default_time">"00:00"</string>
+    <string name="note_select">"Select"</string>
+    <string name="note_select_all">"SelectAll"</string>
+    <string name="note_copy">"Copy"</string>
+    <string name="note_plaster">"Plaster"</string>
+    
+    <string name="search_bar_hint">"Search"</string>
+    <string name="search_all">"SelectAll"</string>
+    <string name="search_copy">"Copy"</string>
+    <string name="search_cancel">"Cancel"</string>
     
 </resources>

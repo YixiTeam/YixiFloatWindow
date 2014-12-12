@@ -1,4 +1,4 @@
 package com.yixi.window.data;
 
 
-parcelable IMusicData;  
+parcelable IMediaData;  

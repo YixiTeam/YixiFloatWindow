@@ -83,11 +83,12 @@ public class FloatWindowBigView2 extends LinearLayout {
         Log.d(TAG, "------FloatWindowBigView--------R.layout.floatwindowidget-----" + R.layout.floatwindowidget);
         Log.d(TAG, "------FloatWindowBigView--------R.layout.floatwindowset-----" + R.layout.floatwindowset);
         switch(layout_id) {
-        	case R.layout.floatwindowmusic:
+        	case R.layout.float_window_music:
         		mFlag = FloatWindowManager.MEDIA_LAYER;
         		title.setText(R.string.music);
+        		mActionCallBack = (ActionCallBack) findViewById(R.id.music_view);
         		break;
-        	case R.layout.floatwindowvideo:
+        	case R.layout.float_window_video:
         		title.setText(R.string.video);
         		mFlag = FloatWindowManager.MEDIA_LAYER;
         		break;
@@ -95,16 +96,16 @@ public class FloatWindowBigView2 extends LinearLayout {
         		title.setText(R.string.cal);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;
-        	case R.layout.floatwindowcon:
+        	case R.layout.float_window_contact:
         		title.setText(R.string.contacts);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;
-        	case R.layout.floatwindownote:
+        	case R.layout.float_window_note:
         		title.setText(R.string.note);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		mActionCallBack = (ActionCallBack) findViewById(R.id.note);
         		break;
-        	case R.layout.floatwindowsearch:
+        	case R.layout.float_window_search:
         		title.setText(R.string.search);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
         		break;

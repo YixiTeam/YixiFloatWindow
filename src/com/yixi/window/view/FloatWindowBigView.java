@@ -148,7 +148,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------noteBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindownote);
+				openNextWindow(R.layout.float_window_note);
 			}
 		});
         
@@ -158,7 +158,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------conBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowcon);
+				openNextWindow(R.layout.float_window_contact);
 			}
 		});
         
@@ -178,7 +178,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------seaBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowsearch);
+				openNextWindow(R.layout.float_window_search);
 			}
 		});
         
@@ -188,7 +188,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------musicBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowmusic);
+				openNextWindow(R.layout.float_window_music);
 			}
 		});
         
@@ -198,7 +198,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------videoBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowvideo);
+				openNextWindow(R.layout.float_window_video);
 			}
 		});
         
