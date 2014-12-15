@@ -673,10 +673,11 @@ public class FloatWindowBigView extends LinearLayout {
 		if (xInScreen > (screenWidth / 2 + viewWidth / 2)) {
 			flag = false;
 		}
-		if (yInScreen < (screenHeight / 2 - viewHeight / 2)) {
+		Log.d("ljz", "----FloatWindowBigView----isTouchInBigWindow-----mParams.y = " + mParams.y + ",--mParams.y + viewHeight = " + mParams.y + viewHeight);
+		if (yInScreen < (mParams.y)) {
 			flag = false;
 		}
-		if (yInScreen > (screenHeight / 2 + viewHeight / 2)) {
+		if (yInScreen > (mParams.y + viewHeight)) {
 			flag = false;
 		}
 		return flag;

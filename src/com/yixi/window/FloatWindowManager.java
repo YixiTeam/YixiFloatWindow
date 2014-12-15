@@ -88,7 +88,7 @@ public class FloatWindowManager {
                 bigWindowParams.width = FloatWindowBigView.viewWidth;
                 bigWindowParams.height = FloatWindowBigView.viewHeight;
             }
-            Log.d("ljz", "----FloatWindowManager---createBigWindow------addView = ");
+            Log.d("ljz", "----FloatWindowManager---createBigWindow------addView ----bigWindowParams.x = " + bigWindowParams.x + "----bigWindowParams.y = " + bigWindowParams.y);
             bigWindow.setParams(bigWindowParams);
             windowManager.addView(bigWindow, bigWindowParams);
         }
@@ -107,12 +107,12 @@ public class FloatWindowManager {
         int screenWidth = windowManager.getDefaultDisplay().getWidth();
         int screenHeight = windowManager.getDefaultDisplay().getHeight();
 
-        Log.d("ljz", "----FloatWindowManager---createBigWindow------screenWidth = " + screenWidth + ",-----screenHeight = " + screenHeight);
+        Log.d("ljz", "----FloatWindowManager---createBigWindow2------screenWidth = " + screenWidth + ",-----screenHeight = " + screenHeight);
         if (bigWindow2 == null) {
             bigWindow2 = new FloatWindowBigView2(context, this, id);
-            Log.d("ljz", "----FloatWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
+            Log.d("ljz", "----FloatWindowManager---createBigWindow2------bigWindowParams = " + bigWindowParams);
             if (bigWindowParams == null) {
-            	Log.d("ljz", "----FloatWindowManager---createBigWindow------bigWindowParams = " + bigWindowParams);
+            	Log.d("ljz", "----FloatWindowManager---createBigWindow2------bigWindowParams = " + bigWindowParams);
                 bigWindowParams = new LayoutParams();
                 bigWindowParams.x = screenWidth / 2
                         - FloatWindowBigView.viewWidth / 2;
@@ -124,7 +124,7 @@ public class FloatWindowManager {
                 bigWindowParams.width = FloatWindowBigView.viewWidth;
                 bigWindowParams.height = FloatWindowBigView.viewHeight;
             }
-            Log.d("ljz", "----FloatWindowManager---createBigWindow------addView = ");
+            Log.d("ljz", "----FloatWindowManager---createBigWindow2------addView = ");
             bigWindow2.setParams(bigWindowParams);
             windowManager.addView(bigWindow2, bigWindowParams);
         }
