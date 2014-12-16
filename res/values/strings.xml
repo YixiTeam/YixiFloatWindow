@@ -22,7 +22,9 @@
     
     <string name="search_bar_hint">"Search"</string>
     <string name="search_all">"SelectAll"</string>
-    <string name="search_copy">"Copy"</string>
+    <string name="search_copy">"Copy contacts' detail?"</string>
     <string name="search_cancel">"Cancel"</string>
+    <string name="copy_contacts_details">"Details of selected contacts will be copy to clipboard."</string>
+    <string name="copy_contacts_details_finish">"Copy to clipboard finish!"</string>
     
 </resources>
