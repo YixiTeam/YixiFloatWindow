@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.animation.ObjectAnimator;
@@ -41,6 +42,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.ServiceManager;
 import android.os.IPowerManager;
 import android.os.IPowerManager.Stub;
@@ -206,8 +209,17 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------shotBtn------Click!!-----");
-				shotscreen();
 				openSmallWindow();
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						shotscreen();
+					}
+					
+				}, 500);
+				
 			}
 		});
 
@@ -464,9 +476,19 @@ public class FloatWindowBigView extends LinearLayout {
         return 0f;
     }
     
+    private String getTime() {
+    	SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = sDateFormat.format(new java.util.Date());
+        return date;
+    }
+    
+    
     private void saveMyBitmap(String bitName, Bitmap bitmap) throws IOException {
-        File f = new File("/data/data/com.yixi.window/" + bitName + ".png");
-        f.createNewFile();
+    	File f = getFilePath(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/screenshot/", "S" + getTime().replace("-", "").replace(":", "").replace(" ", "").toString() + ".png");
+    	
+    	boolean isSuc = f.createNewFile();
+    	Log.d(TAG, "-------saveMyBitmap--------isSuc = " + isSuc + "-------create file in ------------f = " + f);
+        
         FileOutputStream fOut = null;
         try {
                 fOut = new FileOutputStream(f);
@@ -485,6 +507,30 @@ public class FloatWindowBigView extends LinearLayout {
                 e.printStackTrace();
         }
     }
+    
+	public static File getFilePath(String filePath, String fileName) {
+		File file = null;
+		makeRootDirectory(filePath);
+		try {
+			file = new File(filePath + fileName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return file;
+	}
+
+	public static void makeRootDirectory(String filePath) {
+		File file = null;
+		try {
+			file = new File(filePath);
+			if (!file.exists()) {
+				file.mkdir();
+			}
+		} catch (Exception e) {
+
+		}
+	}
     
     private void removeRecentTask() {
     	final ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -627,10 +673,11 @@ public class FloatWindowBigView extends LinearLayout {
 		if (xInScreen > (screenWidth / 2 + viewWidth / 2)) {
 			flag = false;
 		}
-		if (yInScreen < (screenHeight / 2 - viewHeight / 2)) {
+		Log.d("ljz", "----FloatWindowBigView----isTouchInBigWindow-----mParams.y = " + mParams.y + ",--mParams.y + viewHeight = " + mParams.y + viewHeight);
+		if (yInScreen < (mParams.y)) {
 			flag = false;
 		}
-		if (yInScreen > (screenHeight / 2 + viewHeight / 2)) {
+		if (yInScreen > (mParams.y + viewHeight)) {
 			flag = false;
 		}
 		return flag;
