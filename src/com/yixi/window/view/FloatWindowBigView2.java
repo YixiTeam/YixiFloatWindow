@@ -91,6 +91,7 @@ public class FloatWindowBigView2 extends LinearLayout {
         	case R.layout.float_window_video:
         		title.setText(R.string.video);
         		mFlag = FloatWindowManager.MEDIA_LAYER;
+                mActionCallBack = (ActionCallBack) findViewById(R.id.movie_view);
         		break;
         	case R.layout.floatwindowcal:
         		title.setText(R.string.cal);
