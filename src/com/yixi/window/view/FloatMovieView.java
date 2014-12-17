@@ -79,8 +79,12 @@ public class FloatMovieView extends RelativeLayout implements
         mCurrentPos = mSharedpreferences.getInt(PREFERENCE_POSITION, 0);
         int progress = mSharedpreferences.getInt(PREFERENCE_PROGRESS, 0);
         mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
-        mVideoView.seekTo(progress);
-        Log.d("apple", ">>>>>> isPaused = " + isPaused);
+        if (progress == 0) {
+            mVideoView.setBackground(MediaUtils.getVideoThumbnail(mVideoList.get(mCurrentPos).mMediaId, mContext));
+        } else {
+            mVideoView.setBackground(null);
+            mVideoView.seekTo(progress);
+        }
         showPlay(isPaused);
         mHandler = new Handler() {
 
@@ -296,6 +300,7 @@ public class FloatMovieView extends RelativeLayout implements
             Log.d("apple", ">>>>>>> play");
             mBtnPlay.setVisibility(View.GONE);
             mBtnPause.setVisibility(View.VISIBLE);
+            mVideoView.setBackground(null);
             mVideoView.start();
             isPaused = false;
         }
