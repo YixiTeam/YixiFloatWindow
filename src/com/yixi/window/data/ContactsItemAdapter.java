@@ -33,6 +33,16 @@ public class ContactsItemAdapter extends CursorAdapter{
     public static final int IS_USER_PROFILE_INDEX = 7;
     public static final int SNIPPET_INDEX = 8;
     
+    public static final int PHONE_ID                = 0;
+    public static final int PHONE_TYPE              = 1;
+    public static final int PHONE_LABEL             = 2;
+    public static final int PHONE_NUMBER            = 3;
+    public static final int CONTACT_ID              = 4;
+    public static final int LOOKUP_KEY              = 5;
+    public static final int PHOTO_ID                = 6;
+    public static final int DISPLAY_NAME            = 7;
+    public static final int PHOTO_URI               = 8;
+    
     public boolean isSearchMode;
 
 	public ContactsItemAdapter(Context context){
@@ -58,14 +68,16 @@ public class ContactsItemAdapter extends CursorAdapter{
 	@Override
     public void bindView(View view, Context context, Cursor cursor){
 		ContactItemCache cache = (ContactItemCache) view.getTag();
-            cache.id = cursor.getLong(CONTACT_ID_INDEX);
-            cache.lookupKey = cursor.getString(LOOKUP_KEY_INDEX);
-            cache.name = cursor.getString(DISPLAY_NAME_PRIMARY_INDEX);
-            if(isSearchMode){
-            	cache.number = cursor.getString(SNIPPET_INDEX);
-            }else{
-            	cache.number = null;
-            }
+            cache.id = cursor.getLong(PHONE_ID);
+            cache.lookupKey = cursor.getString(LOOKUP_KEY);
+//            if(isSearchMode){
+//            	cache.name = cursor.getString(7/*DISPLAY_NAME_PRIMARY_INDEX*/);
+//            	cache.number = cursor.getString(3/*SNIPPET_INDEX*/);
+//            }else{
+            	cache.number = cursor.getString(PHONE_NUMBER);
+            	cache.name = cursor.getString(DISPLAY_NAME);
+//            }
+            Log.e("anne", "name = " +cache.name + ", number = " +cache.number);
             TextView name = (TextView) view.findViewById(R.id.pick_contact_name);
             TextView number = (TextView) view.findViewById(R.id.pick_contact_number);
             CheckBox selectBtn = (CheckBox) view.findViewById(R.id.pick_contact_check);

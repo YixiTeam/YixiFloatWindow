@@ -42,8 +42,12 @@ import android.widget.Button;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.SearchSnippetColumns;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.CommonDataKinds.Callable;
+import android.provider.ContactsContract.Directory;
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.text.TextUtils;
@@ -127,6 +131,18 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 		Contacts.IS_USER_PROFILE, // 7
 		SearchSnippetColumns.SNIPPET, // 8
 };
+	
+    public static final String[] PROJECTION_PRIMARY = new String[] {
+        Phone._ID,                          // 0
+        Phone.TYPE,                         // 1
+        Phone.LABEL,                        // 2
+        Phone.NUMBER,                       // 3
+        Phone.CONTACT_ID,                   // 4
+        Phone.LOOKUP_KEY,                   // 5
+        Phone.PHOTO_ID,                     // 6
+        Phone.DISPLAY_NAME_PRIMARY,         // 7
+        Phone.PHOTO_THUMBNAIL_URI,          // 8
+    };
 
 	// This constructor is used by LayoutInflater
 	public ContactsSearchView(Context context, AttributeSet attrs) {
@@ -161,18 +177,27 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 	}
 
 	public void initData() {
-		Uri baseUri = Contacts.CONTENT_URI;
-		Builder builder = baseUri.buildUpon();
-		mQueryHandler.startQuery(QUERY_TOKEN, null, builder.build(), CONTACT_PROJECTION_PRIMARY, null,
-                null, CONTACT_PROJECTION_PRIMARY[1]+sortOrder);
+		Uri baseUri = Callable.CONTENT_URI/*Contacts.CONTENT_URI*/;
+        Builder builder = baseUri.buildUpon().appendQueryParameter(
+                ContactsContract.DIRECTORY_PARAM_KEY, String.valueOf(Directory.DEFAULT));
+		mQueryHandler.startQuery(QUERY_TOKEN, null, builder.build(), PROJECTION_PRIMARY, null,
+                null, PROJECTION_PRIMARY[7]+sortOrder);
 //		queryData(builder.build(),CONTACT_PROJECTION_PRIMARY, null, null, CONTACT_PROJECTION_PRIMARY[1]+sortOrder);
 	}
 	
 	public void doFilter(Editable filter){
-		Uri filterUri = Contacts.CONTENT_FILTER_URI;
+		String query = filter.toString();
+		Uri filterUri = Callable.CONTENT_FILTER_URI/*Contacts.CONTENT_FILTER_URI*/;
 		Builder builder = filterUri.buildUpon();
-		builder.appendEncodedPath(Uri.encode(filter.toString()));
-		mQueryHandler.startQuery(QUERY_TOKEN, null, builder.build(), FILTER_PROJECTION_PRIMARY, null,
+//		builder.appendEncodedPath(Uri.encode(filter.toString()));
+		if(TextUtils.isEmpty(filter)){
+			query = "";
+		}
+		builder.appendPath(query);      // Builder will encode the query
+		builder.appendQueryParameter(ContactsContract.DIRECTORY_PARAM_KEY,
+				String.valueOf(0));
+		builder.appendQueryParameter(ContactsContract.REMOVE_DUPLICATE_ENTRIES, "true");
+		mQueryHandler.startQuery(QUERY_TOKEN, null, builder.build(), PROJECTION_PRIMARY, null,
                 null, FILTER_PROJECTION_PRIMARY[1] + sortOrder);
 	}
 	
@@ -268,7 +293,10 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 		if(isChecked){
 			String[] value = null;
 			ContactItemCache cache = (ContactItemCache)view.getTag();
-			value = new String[]{String.valueOf(cache.id),cache.name,cache.number};
+			value = new String[]{cache.name,cache.number};//copy name, number
+			if(!TextUtils.isEmpty(cache.number)){
+				
+			}
 			mChoiceSet.putStringArray(String.valueOf(cache.id), value);
 		}else{
 			mChoiceSet.remove(String.valueOf(id));
@@ -314,12 +342,14 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 				long id = cursor.getLong(0);
 				String number = null;
 				String lookupKey = cursor.getString(6);
-				String name = cursor.getString(1);
-				if(isSearchMode()){
-					number = cursor.getString(8);
-				}else{
-					number = null;
-				}
+				String name = null;
+//				if(isSearchMode()){
+//					number = cursor.getString(8);
+//					name = cursor.getString(1);
+//				}else{
+					number = cursor.getString(3);
+					name = cursor.getString(7);
+//				}
 				value = new String[]{name, number};
 				if(select){
 					mChoiceSet.putStringArray(String.valueOf(id), value);
