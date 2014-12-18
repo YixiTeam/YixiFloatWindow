@@ -13,6 +13,7 @@ import com.yixi.window.view.FloatWindowBigView2.ActionCallBack;
 import com.yixi.window.service.IOnServiceConnectComplete;
 import com.yixi.window.service.ServiceManager;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -230,6 +232,10 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     }
 
     public void init() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        mContext.registerReceiver(mPhoneReceiver, intentFilter);
         mPlayStateBrocast = new MusicPlayStateBrocast();
         IntentFilter intentFilter1 = new IntentFilter(MusicPlayer.BROCAST_NAME);
         mContext.registerReceiver(mPlayStateBrocast, intentFilter1);
@@ -388,4 +394,19 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         exit();
 
     }
+
+    private BroadcastReceiver mPhoneReceiver = new BroadcastReceiver () {
+
+        @Override
+        public void onReceive(Context context, Intent action) {
+            TelephonyManager tm = (TelephonyManager) context 
+                    .getSystemService(Service.TELEPHONY_SERVICE); 
+            if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+                mServiceManager.rePlay();
+            } else {
+                mServiceManager.pause();
+            }
+        }
+        
+    };
 }
