@@ -90,14 +90,14 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/search_copy"
+            android:text="@string/search_copy_btn"
         />
 
         <Button android:id="@+id/btn_cancel"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/search_cancel"
+            android:text="@string/search_cancel_btn"
         />
     </LinearLayout>
 </com.yixi.window.view.ContactsSearchView>

@@ -165,6 +165,7 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 		Builder builder = baseUri.buildUpon();
 		mQueryHandler.startQuery(QUERY_TOKEN, null, builder.build(), CONTACT_PROJECTION_PRIMARY, null,
                 null, CONTACT_PROJECTION_PRIMARY[1]+sortOrder);
+//		queryData(builder.build(),CONTACT_PROJECTION_PRIMARY, null, null, CONTACT_PROJECTION_PRIMARY[1]+sortOrder);
 	}
 	
 	public void doFilter(Editable filter){
@@ -173,6 +174,14 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 		builder.appendEncodedPath(Uri.encode(filter.toString()));
 		mQueryHandler.startQuery(QUERY_TOKEN, null, builder.build(), FILTER_PROJECTION_PRIMARY, null,
                 null, FILTER_PROJECTION_PRIMARY[1] + sortOrder);
+	}
+	
+	public void queryData(Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy){
+		Cursor cursor = mContext.getContentResolver().query(uri, projection, selection, selectionArgs, orderBy);
+		if(cursor != null){
+			Log.e("anne", "queryData cursor count = " + cursor.getCount());
+		}
+		mAdapter.changeCursor(cursor);
 	}
 
 	@Override
@@ -187,7 +196,7 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
 		case R.id.btn_copy:
 			if(mChoiceSet != null && mChoiceSet.size() > 0){
 				AlertDialog.Builder builder = new AlertDialog.Builder(mContext.getApplicationContext())
-				.setTitle(mContext.getResources().getString(R.string.search_copy))
+				.setTitle(mContext.getResources().getString(R.string.search_copy_message))
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setMessage(mContext.getResources().getString(R.string.copy_contacts_details))
 	            .setNegativeButton(android.R.string.cancel, null)
@@ -348,7 +357,7 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
             };
 			//mContext.getResources().getString(R.string.search_cancel)
             mProgressDialog = new ProgressDialog(mContext.getApplicationContext());
-            mProgressDialog.setTitle(mContext.getResources().getString(R.string.search_copy));
+            mProgressDialog.setTitle(mContext.getResources().getString(R.string.search_copy_message));
             mProgressDialog.setMessage(mContext.getResources().getString(R.string.copy_contacts_details));
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
@@ -428,6 +437,9 @@ public class ContactsSearchView extends LinearLayout implements ActionCallBack,
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor){
         	Log.e("anne", "onQueryComplete...");
+        	if(cursor != null){
+        		Log.e("anne", "cursor = " + cursor.getCount());
+        	}
             mAdapter.changeCursor(cursor);
         }
 	}

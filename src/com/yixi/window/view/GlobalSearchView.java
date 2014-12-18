@@ -74,7 +74,7 @@ View.OnClickListener, TextWatcher, AdapterView.OnItemClickListener{
     public GlobalSearchView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mFloatWindowManager = new FloatWindowManager(mContext);
+        mFloatWindowManager = FloatWindowManager.getInstance(mContext);
     }
     
     @Override
