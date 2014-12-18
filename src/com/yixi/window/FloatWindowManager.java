@@ -23,10 +23,11 @@ public class FloatWindowManager {
 	public static final int MEDIA_LAYER = 1;
 	public static final int WIDGET_LAYER = 2;
 	public static final int SET_LAYER = 3;
+	private static FloatWindowManager mFloatWindowManager = null; 
 	
-    private FloatWindowSmallView smallWindow;
-    private FloatWindowBigView bigWindow;
-    private FloatWindowBigView2 bigWindow2;
+    private static FloatWindowSmallView smallWindow;
+    private static FloatWindowBigView bigWindow;
+    private static FloatWindowBigView2 bigWindow2;
     private LayoutParams smallWindowParams;
     private LayoutParams bigWindowParams;
     private WindowManager mWindowManager;
@@ -34,10 +35,19 @@ public class FloatWindowManager {
     public Thread mThread;
     public Message msg;
     private WindowManager windowManager;
+    
     public FloatWindowManager(Context context) {
         mContext = context;
         windowManager = getWindowManager(context);
     }
+    
+    public static FloatWindowManager getInstance(Context context) {
+    	if (mFloatWindowManager == null) {
+    		mFloatWindowManager = new FloatWindowManager(context);
+    	}
+    	return mFloatWindowManager;
+    }
+    
     public void createSmallWindow(Context context) {
         int screenWidth = windowManager.getDefaultDisplay().getWidth();
         int screenHeight = windowManager.getDefaultDisplay().getHeight();
@@ -59,12 +69,12 @@ public class FloatWindowManager {
             windowManager.addView(smallWindow, smallWindowParams);
         }
     }
+    
     public void removeSmallWindow(Context context) {
         if (smallWindow != null) {
             windowManager.removeView(smallWindow);
             smallWindow = null;
         }
-
     }
 
     public void createBigWindow(Context context, int flag) {
@@ -93,14 +103,13 @@ public class FloatWindowManager {
             windowManager.addView(bigWindow, bigWindowParams);
         }
         ScaleToNormal(bigWindow);
-
-//        StepView stepCount = (StepView) bigWindow
-//                .findViewById(R.id.stepview);
-        //CalorieView calorie=(CalorieView) bigWindow.findViewById(R.id.calorieview);
-//        if(stepCount.isShown()){
-//            stepCount.update(mData.getNewStepValue());
-//        }
-
+    }
+    
+    public void removeBigWindow(Context context) {
+        if (bigWindow != null) {
+            windowManager.removeView(bigWindow);
+            bigWindow = null;
+        }
     }
     
     public void createBigWindow2(Context context, int id) {
@@ -129,47 +138,8 @@ public class FloatWindowManager {
             windowManager.addView(bigWindow2, bigWindowParams);
         }
         ScaleToNormal(bigWindow2);
-
-//        StepView stepCount = (StepView) bigWindow
-//                .findViewById(R.id.stepview);
-        //CalorieView calorie=(CalorieView) bigWindow.findViewById(R.id.calorieview);
-//        if(stepCount.isShown()){
-//            stepCount.update(mData.getNewStepValue());
-//        }
-
     }
 
-    public void createScendWindow(Context context) {
-        int screenWidth = windowManager.getDefaultDisplay().getWidth();
-        int screenHeight = windowManager.getDefaultDisplay().getHeight();
-
-        if (bigWindow == null) {
-            bigWindow = new FloatWindowBigView(context, this, 0);
-            if (bigWindowParams == null) {
-                bigWindowParams = new LayoutParams();
-                bigWindowParams.x = screenWidth / 2
-                        - FloatWindowBigView.viewWidth / 2;
-                bigWindowParams.y = screenHeight / 2
-                        - FloatWindowBigView.viewHeight / 2;
-                bigWindowParams.type = LayoutParams.TYPE_PHONE;
-                bigWindowParams.format = PixelFormat.RGBA_8888;
-                bigWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
-                bigWindowParams.width = FloatWindowBigView.viewWidth;
-                bigWindowParams.height = FloatWindowBigView.viewHeight;
-            }
-        }
-        windowManager.addView(bigWindow, bigWindowParams);
-        ScaleToNormal(bigWindow);
-
-    }
-
-    public void removeBigWindow(Context context) {
-        if (bigWindow != null) {
-            windowManager.removeView(bigWindow);
-            bigWindow = null;
-        }
-    }
-    
     public void removeBigWindow2(Context context) {
         if (bigWindow2 != null) {
         	if (bigWindow2.mActionCallBack != null) {
