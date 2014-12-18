@@ -7,15 +7,21 @@ import com.yixi.window.data.IMediaData;
 import com.yixi.window.utils.MediaUtils;
 import com.yixi.window.view.FloatWindowBigView2.ActionCallBack;
 
+import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +61,22 @@ public class FloatMovieView extends RelativeLayout implements
     private static final String PREFERENCE_PROGRESS = "video_progress";
     private int mProgress = 0;
 
+    private BroadcastReceiver mPhoneReceiver = new BroadcastReceiver () {
+
+        @Override
+        public void onReceive(Context context, Intent action) {
+            TelephonyManager tm = (TelephonyManager) context 
+                    .getSystemService(Service.TELEPHONY_SERVICE); 
+            if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+                isPaused = false;
+            } else {
+                isPaused = true;
+            }
+            showPlay(isPaused);
+        }
+        
+    };
+
     public FloatMovieView(Context context) {
         super(context);
     }
@@ -73,6 +95,10 @@ public class FloatMovieView extends RelativeLayout implements
 
     private void init() {
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        mContext.registerReceiver(mPhoneReceiver, intentFilter);
         mVideoList = MediaUtils.getVideoFileList(mContext);
         mIsHaveData = (mVideoList.size() > 0);
         mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
@@ -107,7 +133,6 @@ public class FloatMovieView extends RelativeLayout implements
     }
 
     private void initView() {
-
         mBtnPlay = (ImageButton) mLayoutView.findViewById(R.id.buttonPlay);
         mBtnPause = (ImageButton) mLayoutView.findViewById(R.id.buttonPause);
         mBtnPlayPre = (ImageButton) mLayoutView
@@ -259,6 +284,7 @@ public class FloatMovieView extends RelativeLayout implements
     @Override
     public void doAction() {
         mVideoView.stopPlayback();
+        mContext.unregisterReceiver(mPhoneReceiver);
         mHandler.removeMessages(REFRESH_PROGRESS_EVENT);
         mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedpreferences.edit();
@@ -291,13 +317,11 @@ public class FloatMovieView extends RelativeLayout implements
 
     public void showPlay(boolean flag) {
         if (flag) {
-            Log.d("apple", ">>>>>>> pause");
             mBtnPlay.setVisibility(View.VISIBLE);
             mBtnPause.setVisibility(View.GONE);
             mVideoView.pause();
             isPaused = true;
         } else {
-            Log.d("apple", ">>>>>>> play");
             mBtnPlay.setVisibility(View.GONE);
             mBtnPause.setVisibility(View.VISIBLE);
             mVideoView.setBackground(null);
