@@ -26,39 +26,33 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<com.yixi.window.view.GlobalSearchView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+--><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    <LinearLayout
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal"
+    android:paddingBottom="3dip"
+    android:paddingTop="3dip" >
+
+    <ImageView
+        android:id="@+id/pick_app_icon"
+        android:layout_width="64dip"
+        android:layout_height="64dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="5dip" />
+
+    <TextView
+        android:id="@+id/pick_app_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="@android:style/ButtonBar">
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="50dip"
+        android:layout_marginTop="5dip"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000"
+        android:textSize="18sp" >
+    </TextView>
+</LinearLayout>
 
-        <EditText
-            android:id="@+id/global_search_field"
-            android:layout_height="wrap_content"
-            android:layout_width="0dip"
-            android:layout_weight="1.0"
-            android:layout_marginLeft="5dip"
-            android:layout_marginRight="5dip"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:inputType="textNoSuggestions"
-            android:imeOptions="actionDone"
-            android:hint="@string/search_bar_hint"
-            android:freezesText="true"
-        />
-    </LinearLayout>
 
-    <ListView android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1.0"
-        android:fastScrollEnabled="true"
-        android:id="@+id/global_list">
-    </ListView>
-</com.yixi.window.view.GlobalSearchView>

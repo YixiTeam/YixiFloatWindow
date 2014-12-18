@@ -171,6 +171,7 @@ public class FloatWindowManager {
     }
     
     public void removeBigWindow2(Context context) {
+    	Log.e("anne", "removeBigWindow2 ...bigWindow2 = " + bigWindow2);
         if (bigWindow2 != null) {
         	if (bigWindow2.mActionCallBack != null) {
         		bigWindow2.mActionCallBack.doAction();
