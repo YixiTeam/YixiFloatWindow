@@ -1,63 +1,59 @@
 package com.yixi.window.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.yixi.window.R;
 import com.yixi.window.data.IMediaData;
-import com.yixi.window.data.MediaPlayState;
-import com.yixi.window.data.MusicPlayer;
-import com.yixi.window.service.IOnServiceConnectComplete;
-import com.yixi.window.service.ServiceManager;
-import com.yixi.window.utils.MediaTimer;
+import com.yixi.window.utils.MediaUtils;
+import com.yixi.window.view.FloatWindowBigView2.ActionCallBack;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Environment;
+import android.content.SharedPreferences;
+import android.database.ContentObserver;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class FloatMovieView extends RelativeLayout implements
-        SurfaceHolder.Callback, OnSeekBarChangeListener, OnClickListener, IOnServiceConnectComplete{
+        OnSeekBarChangeListener, OnClickListener, ActionCallBack,
+        OnCompletionListener, OnPreparedListener {
     private static final int REFRESH_PROGRESS_EVENT = 0x0010;
     private boolean mIsHaveData = false;
     private View mLayoutView;
-    private SurfaceView mMediaView;
-    private SurfaceHolder mHolder;
 
     public ImageButton mBtnPlay;
     public ImageButton mBtnPause;
     public ImageButton mBtnPlayNext;
     public ImageButton mBtnPlayPre;
     public TextView mPlaySongTextView;
+    public VideoView mVideoView;
     public SeekBar mPlayProgress;
     public TextView mcurtimeTextView;
     public TextView mtotaltimeTextView;
-    private int mCurrent;
-    private MediaPlayStateBrocast mPlayStateBrocast;
+    private int mCurrentPos;
     private Context mContext;
-    private List<IMediaData> mVedioList;
-    private int mCurMediaTotalTime;
-    private MediaTimer mMediaTimer;
+    private List<IMediaData> mVideoList;
     private Handler mHandler;
-    private ServiceManager mServiceManager;
+    private boolean isPaused = true;
+    private boolean isOnline = false;
+    private SharedPreferences mSharedpreferences;
+    private static final String PREFERENCE_NAME = "save_info";
+    private static final String PREFERENCE_POSITION = "video_pos";
+    private static final String PREFERENCE_PROGRESS = "video_progress";
+    private int mProgress = 0;
 
     public FloatMovieView(Context context) {
         super(context);
@@ -66,21 +62,52 @@ public class FloatMovieView extends RelativeLayout implements
     public FloatMovieView(Context context, AttributeSet ats) {
         super(context, ats);
         mContext = context;
+        mCurrentPos = 0;
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mLayoutView = inflater.inflate(R.layout.movie_player, this, true);
         initView();
         init();
+        registerMusicContentObserver();
     }
+
     private void init() {
+
+        mVideoList = MediaUtils.getVideoFileList(mContext);
+        mIsHaveData = (mVideoList.size() > 0);
+        mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
+        mCurrentPos = mSharedpreferences.getInt(PREFERENCE_POSITION, 0);
+        int progress = mSharedpreferences.getInt(PREFERENCE_PROGRESS, 0);
+        mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
+        if (progress == 0) {
+            mVideoView.setBackground(MediaUtils.getVideoThumbnail(mVideoList.get(mCurrentPos).mMediaId, mContext));
+        } else {
+            mVideoView.setBackground(null);
+            mVideoView.seekTo(progress);
+        }
+        showPlay(isPaused);
+        mHandler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+
+                switch (msg.what) {
+                case REFRESH_PROGRESS_EVENT:
+                    setPlayInfo();
+                    break;
+                default:
+
+                    break;
+                }
+            }
+
+        };
+        
     }
 
     private void initView() {
-        // TODO Auto-generated method stub
-        mMediaView = (SurfaceView) mLayoutView.findViewById(R.id.movie_layout);
-        mHolder = mMediaView.getHolder();
-        mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
         mBtnPlay = (ImageButton) mLayoutView.findViewById(R.id.buttonPlay);
         mBtnPause = (ImageButton) mLayoutView.findViewById(R.id.buttonPause);
         mBtnPlayPre = (ImageButton) mLayoutView
@@ -101,104 +128,43 @@ public class FloatMovieView extends RelativeLayout implements
 
         mPlayProgress = (SeekBar) mLayoutView.findViewById(R.id.seekBar);
         mPlayProgress.setOnSeekBarChangeListener(this);
+        mVideoView = (VideoView) findViewById(R.id.movie_layout);
+        mVideoView.setOnCompletionListener(this);
+        mVideoView.setOnPreparedListener(this);
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-        // TODO Auto-generated method stub
+    public void onProgressChanged(SeekBar seekbar, int progress,
+            boolean fromUser) {
+        mProgress = progress;
         
+        if (fromUser) {
+            if (!isOnline) {
+                mVideoView.seekTo(progress);
+            }
+
+        }
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar arg0) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar arg0) {
         // TODO Auto-generated method stub
-        
-    }
 
-
-    class MediaPlayStateBrocast extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(MusicPlayer.BROCAST_NAME)) {
-                transPlayStateEvent(intent);
-            }
-
-        }
-
-    }
-
-    public void transPlayStateEvent(Intent intent) {
-        IMediaData data = new IMediaData();
-        int playState = intent.getIntExtra(MediaPlayState.PLAY_STATE_NAME, -1);
-        Bundle bundle = intent.getBundleExtra(IMediaData.KEY_MEDIA_DATA);
-        if (bundle != null) {
-            data = bundle.getParcelable(IMediaData.KEY_MEDIA_DATA);
-        }
-        int playIndex = intent.getIntExtra(MediaPlayState.PLAY_MEDIA_INDEX, -1);
-        switch (playState) {
-        case MediaPlayState.MPS_INVALID:
-            mMediaTimer.stopTimer();
-            showPlay(true);
-            break;
-        case MediaPlayState.MPS_PREPARE:
-            mMediaTimer.stopTimer();
-            mCurMediaTotalTime = data.mMediaTime;
-            if (mCurMediaTotalTime == 0) {
-            }
-            showPlay(true);
-            break;
-        case MediaPlayState.MPS_PLAYING:
-            mMediaTimer.startTimer();
-            if (mCurMediaTotalTime == 0) {
-            }
-            showPlay(false);
-            break;
-        case MediaPlayState.MPS_PAUSE:
-            mMediaTimer.stopTimer();
-            if (mCurMediaTotalTime == 0) {
-            }
-            showPlay(true);
-            break;
-        default:
-            break;
-        }
     }
 
     @Override
     public void onClick(View view) {
-         //TODO Auto-generated method stub
+        // TODO Auto-generated method stub
         switch (view.getId()) {
         case R.id.buttonPlay:
-            rePlay();
-            break;
         case R.id.buttonPause:
-            pause();
+            rePlay();
             break;
         case R.id.buttonPlayPre:
             playPre();
@@ -211,121 +177,133 @@ public class FloatMovieView extends RelativeLayout implements
         }
     }
 
-    @Override
-    public void OnServiceConnectComplete() {
-        // TODO Auto-generated method stub
-        String state = Environment.getExternalStorageState().toString();
-        if (state.equals(Environment.MEDIA_MOUNTED)) {
+    public void setPlayInfo() {
+        int i = mVideoView.getCurrentPosition();
+        mPlayProgress.setProgress(i);
+
+        if (isOnline) {
+            int j = mVideoView.getBufferPercentage();
+            mPlayProgress
+                    .setSecondaryProgress(j * mPlayProgress.getMax() / 100);
         } else {
-            return;
+            mPlayProgress.setSecondaryProgress(0);
         }
 
-        int playState = mServiceManager.getPlayState();
-        switch (playState) {
-        case MediaPlayState.MPS_NOFILE:
-//            mVedioList = MediaUtils.getVideoFileList(mContext);
-//            mServiceManager.refreshVideoList(mVedioList);
-            break;
-        case MediaPlayState.MPS_INVALID:
-        case MediaPlayState.MPS_PREPARE:
-        case MediaPlayState.MPS_PLAYING:
-        case MediaPlayState.MPS_PAUSE:
-//            mVedioList = mServiceManager.getFileList();
-            long time2 = System.currentTimeMillis();
-            break;
-        default:
-            break;
-        }
-
-        if (mVedioList.size() > 0) {
-            mIsHaveData = true;
-        }
-    }
-
-    public void setPlayInfo(int curTime, int totalTime, String musicName, boolean loadingInfo) {
-        curTime /= 1000;
-        totalTime /= 1000;
-        int curminute = curTime / 60;
-        int cursecond = curTime % 60;
-
-        String curTimeString = String.format("%02d:%02d", curminute, cursecond);
-
-        int totalminute = totalTime / 60;
-        int totalsecond = totalTime % 60;
-        String totalTimeString = String.format("%02d:%02d", totalminute,
-                totalsecond);
-
-        int rate = 0;
-        if (totalTime != 0) {
-            rate = (int) ((float) curTime / totalTime * 100);
-        }
-
-        mPlayProgress.setProgress(rate);
-
-        mcurtimeTextView.setText(curTimeString);
-        mtotaltimeTextView.setText(totalTimeString);
-        if (loadingInfo) {
-            if (musicName != null) {
-                mPlaySongTextView.setText(musicName);
-            }
-        }
-
-    }
-
-    public void showPlay(boolean flag) {
-        if (flag) {
-            mBtnPlay.setVisibility(View.VISIBLE);
-            mBtnPause.setVisibility(View.GONE);
-        } else {
-            mBtnPlay.setVisibility(View.GONE);
-            mBtnPause.setVisibility(View.VISIBLE);
-        }
+        i /= 1000;
+        int minute = i / 60;
+        int hour = minute / 60;
+        int second = i % 60;
+        minute %= 60;
+        mcurtimeTextView.setText(String.format("%02d:%02d:%02d", hour, minute,
+                second));
+        mHandler.sendEmptyMessageDelayed(REFRESH_PROGRESS_EVENT, 100);
 
     }
 
     public void showNoData() {
-
     }
 
     public void rePlay() {
-        if (mIsHaveData == false) {
-            showNoData();
-        } else {
-            mServiceManager.rePlay();
-        }
-
-    }
-
-    public void pause() {
-        mServiceManager.pause();
+        isPaused = !isPaused;
+        showPlay(isPaused);
     }
 
     public void playPre() {
+        isOnline = false;
         if (!mIsHaveData) {
-            showNoData();
         } else {
-            mServiceManager.playPre();
+            if (--mCurrentPos < 0) {
+                mCurrentPos = mVideoList.size() - 1;
+            }
+            mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
+            showPlay(false);
         }
 
     }
 
     public void playNext() {
+        isOnline = false;
         if (!mIsHaveData) {
             showNoData();
         } else {
-            mServiceManager.playNext();
+            if (++mCurrentPos >= mVideoList.size()) {
+                mCurrentPos = 0;
+            }
+            mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
+            showPlay(false);
+        }
+    }
+
+    public void registerMusicContentObserver() {
+        MusicObserver musicContent = new MusicObserver(new Handler());
+        mContext.getContentResolver()
+                .registerContentObserver(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true,
+                        musicContent);
+    }
+
+    class MusicObserver extends ContentObserver {
+
+        public MusicObserver(Handler handler) {
+            super(handler);
+
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            // TODO Auto-generated method stub
+            super.onChange(selfChange);
+        }
+    }
+
+    @Override
+    public void doAction() {
+        mVideoView.stopPlayback();
+        mHandler.removeMessages(REFRESH_PROGRESS_EVENT);
+        mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedpreferences.edit();
+        editor.putInt(PREFERENCE_POSITION, mCurrentPos);
+        editor.putInt(PREFERENCE_PROGRESS, mProgress);
+        editor.commit();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        playNext();
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+
+        int duration = mVideoView.getDuration();
+        mPlayProgress.setMax(duration);
+        duration /= 1000;
+        int minute = duration / 60;
+        int hour = minute / 60;
+        int second = duration % 60;
+        minute %= 60;
+        mtotaltimeTextView.setText(String.format("%02d:%02d:%02d", hour,
+                minute, second));
+        mPlaySongTextView.setText(mVideoList.get(mCurrentPos).mMediaName);
+        mHandler.sendEmptyMessage(REFRESH_PROGRESS_EVENT);
+    }
+
+
+    public void showPlay(boolean flag) {
+        if (flag) {
+            Log.d("apple", ">>>>>>> pause");
+            mBtnPlay.setVisibility(View.VISIBLE);
+            mBtnPause.setVisibility(View.GONE);
+            mVideoView.pause();
+            isPaused = true;
+        } else {
+            Log.d("apple", ">>>>>>> play");
+            mBtnPlay.setVisibility(View.GONE);
+            mBtnPause.setVisibility(View.VISIBLE);
+            mVideoView.setBackground(null);
+            mVideoView.start();
+            isPaused = false;
         }
 
     }
-
-    public void seekTo(int rate) {
-        mServiceManager.seekTo(rate);
-    }
-
-    public void exit() {
-        mServiceManager.pause();
-        showPlay(false);
-        
-    }
-
 }

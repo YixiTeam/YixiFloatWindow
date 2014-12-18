@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 
 import com.yixi.window.R;
 import com.yixi.window.data.IMediaData;
@@ -148,4 +149,14 @@ public class MediaUtils {
         }
     }
 
+    public static Drawable getVideoThumbnail(int videoId, Context context) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), videoId,
+                Images.Thumbnails.MICRO_KIND, options);
+        if (bitmap == null) {
+            return context.getResources().getDrawable(R.drawable.ablum_deflaut);
+        } else {
+            return new BitmapDrawable(bitmap);
+        }
+    }
 }

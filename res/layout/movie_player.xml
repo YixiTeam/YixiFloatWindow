@@ -4,11 +4,10 @@
     android:layout_height="fill_parent"
     android:background="@android:color/transparent" >
 
-    <SurfaceView
+<com.yixi.window.view.VideoView
         android:id="@+id/movie_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scaleType="center" />
+        android:layout_height="fill_parent" />
 
     <TextView
         android:id="@+id/movie_title"

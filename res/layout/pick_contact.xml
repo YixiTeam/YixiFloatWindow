@@ -60,6 +60,7 @@
             android:layout_marginRight="5dip"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:singleLine="true"
+            android:textSize="20sp"
             android:text="@string/search_all"
         />
         <CheckBox
@@ -70,11 +71,14 @@
         />
     </LinearLayout>
 
-    <ListView android:layout_width="match_parent"
+    <ListView 
+        android:id="@+id/list"
+        android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1.0"
         android:fastScrollEnabled="true"
-        android:id="@android:id/list">
+        android:divider="@drawable/line"
+        >
     </ListView>
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,7 +86,7 @@
         android:orientation="horizontal"
         style="@android:style/ButtonBar">
 
-        <Button android:id="@+id/btn_ok"
+        <Button android:id="@+id/btn_copy"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
