@@ -127,16 +127,19 @@ public class FloatMovieView extends RelativeLayout implements
         mContext.registerReceiver(mPhoneReceiver, intentFilter);
         mVideoList = MediaUtils.getVideoFileList(mContext);
         mIsHaveData = (mVideoList.size() > 0);
-        mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
-        mCurrentPos = mSharedpreferences.getInt(PREFERENCE_POSITION, 0);
-        int progress = mSharedpreferences.getInt(PREFERENCE_PROGRESS, 0);
-        mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
-        if (progress == 0) {
-            mVideoView.setBackground(MediaUtils.getVideoThumbnail(mVideoList.get(mCurrentPos).mMediaId, mContext));
-        } else {
-            mVideoView.setBackground(null);
-            mVideoView.seekTo(progress);
+        if (mIsHaveData) {
+            mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
+            mCurrentPos = mSharedpreferences.getInt(PREFERENCE_POSITION, 0);
+            int progress = mSharedpreferences.getInt(PREFERENCE_PROGRESS, 0);
+            mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
+            if (progress == 0) {
+                mVideoView.setBackground(MediaUtils.getVideoThumbnail(mVideoList.get(mCurrentPos).mMediaId, mContext));
+            } else {
+                mVideoView.setBackground(null);
+                mVideoView.seekTo(progress);
+            }
         }
+      
         showPlay(isPaused);
         mHandler = new Handler() {
 
@@ -342,18 +345,20 @@ public class FloatMovieView extends RelativeLayout implements
 
 
     public void showPlay(boolean flag) {
-        if (flag) {
-            mBtnPlay.setVisibility(View.VISIBLE);
-            mBtnPause.setVisibility(View.GONE);
-            mVideoView.pause();
-            isPaused = true;
-        } else {
-            mBtnPlay.setVisibility(View.GONE);
-            mBtnPause.setVisibility(View.VISIBLE);
-            mVideoView.setBackground(null);
-            mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-            mVideoView.start();
-            isPaused = false;
+        if (mIsHaveData) {
+            if (flag) {
+                mBtnPlay.setVisibility(View.VISIBLE);
+                mBtnPause.setVisibility(View.GONE);
+                mVideoView.pause();
+                isPaused = true;
+            } else {
+                mBtnPlay.setVisibility(View.GONE);
+                mBtnPause.setVisibility(View.VISIBLE);
+                mVideoView.setBackground(null);
+                mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                mVideoView.start();
+                isPaused = false;
+            }
         }
 
     }
