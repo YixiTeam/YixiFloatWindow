@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -60,13 +61,14 @@ public class FloatMovieView extends RelativeLayout implements
     private static final String PREFERENCE_POSITION = "video_pos";
     private static final String PREFERENCE_PROGRESS = "video_progress";
     private int mProgress = 0;
+    private AudioManager mAudioManager;
 
     private BroadcastReceiver mPhoneReceiver = new BroadcastReceiver () {
 
         @Override
         public void onReceive(Context context, Intent action) {
             TelephonyManager tm = (TelephonyManager) context 
-                    .getSystemService(Service.TELEPHONY_SERVICE); 
+                    .getSystemService(Service.TELEPHONY_SERVICE);
             if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
                 isPaused = false;
             } else {
@@ -77,6 +79,29 @@ public class FloatMovieView extends RelativeLayout implements
         
     };
 
+    private  OnAudioFocusChangeListener mAudioFocusChangeListener = new OnAudioFocusChangeListener() {
+        
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_LOSS:
+                isPaused = true;
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                if (mVideoView.isPlaying()) {
+                    isPaused = true;
+                }
+                break;
+            case AudioManager.AUDIOFOCUS_GAIN:
+                isPaused = false;
+                break;
+            default:
+                break;
+            }
+            showPlay(isPaused);
+        }
+    };
     public FloatMovieView(Context context) {
         super(context);
     }
@@ -94,7 +119,8 @@ public class FloatMovieView extends RelativeLayout implements
     }
 
     private void init() {
-
+        mAudioManager = (AudioManager) mContext.getSystemService(mContext.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
         intentFilter.setPriority(Integer.MAX_VALUE);
@@ -325,6 +351,7 @@ public class FloatMovieView extends RelativeLayout implements
             mBtnPlay.setVisibility(View.GONE);
             mBtnPause.setVisibility(View.VISIBLE);
             mVideoView.setBackground(null);
+            mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             mVideoView.start();
             isPaused = false;
         }

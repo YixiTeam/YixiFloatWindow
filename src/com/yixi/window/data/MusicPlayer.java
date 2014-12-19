@@ -61,6 +61,10 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
         mPlayState = MediaPlayState.MPS_NOFILE;
     }
 
+    public boolean isPlaying() {
+        return mMediaPlayer.isPlaying();
+    }
+
     public void refreshMusicList(List<IMediaData> FileList) {
 
         if (FileList == null) {
@@ -269,14 +273,9 @@ public class MusicPlayer implements OnCompletionListener, OnErrorListener {
 
         String path = mMusicFileList.get(index).mMediaPath;
         try {
-        	Log.d("apple", ">>>>>mMediaPlayer 111 ");
             mMediaPlayer.setDataSource(path);
-            Log.d("apple", ">>>>>mMediaPlayer 222 ");
             mMediaPlayer.prepare();
-            Log.d("apple", ">>>>>mMediaPlayer 333 ");
             mPlayState = MediaPlayState.MPS_PREPARE;
-            Log.d("apple", ">>>>>mMediaPlayer 444 ");
-            Log.i("apple", "mMediaPlayer.prepare	path = " + path);
             sendPlayStateBrocast();
 
         } catch (Exception e) {

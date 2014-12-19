@@ -11,6 +11,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -22,7 +24,9 @@ public class MediaService extends Service {
     private MusicPlayer mMusicPlayer;
 
     private SDStateBrocast mSDStateBrocast;
+    private AudioManager mAudioManager;
 
+    private boolean mPausedByTransientLossOfFocus;
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -43,6 +47,8 @@ public class MediaService extends Service {
         intentFilter.addAction(Intent.ACTION_MEDIA_EJECT);
         intentFilter.addDataScheme("file");
         registerReceiver(mSDStateBrocast, intentFilter);
+        mAudioManager = (AudioManager) getSystemService(Service.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
     }
 
@@ -115,6 +121,8 @@ public class MediaService extends Service {
         @Override
         public boolean rePlay() throws RemoteException {
             // TODO Auto-generated method stub
+            mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
             return mMusicPlayer.replay();
         }
 
@@ -148,6 +156,47 @@ public class MediaService extends Service {
             mMusicPlayer.sendPlayStateBrocast();
         }
 
+    };
+
+
+    private  OnAudioFocusChangeListener mAudioFocusChangeListener = new OnAudioFocusChangeListener() {
+
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            Log.d("apple", ">>>>>>> focusChange = " + focusChange);
+            Log.d("apple", ">>>>>>> mPausedByTransientLossOfFocus = " + mPausedByTransientLossOfFocus);
+            if (mMusicPlayer == null) {
+                Log.d("apple", ">>>>>>>>>>>>222>> ");
+                mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
+                
+            }
+            switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_LOSS:
+                mMusicPlayer.pause();
+                mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                if (mMusicPlayer.isPlaying()) {
+                    Log.d("apple", ">>>>>>>>>>>>>> ");
+                    mPausedByTransientLossOfFocus = true;
+                    mMusicPlayer.pause();
+                }
+                break;
+            case AudioManager.AUDIOFOCUS_GAIN:
+                if (mPausedByTransientLossOfFocus) {
+                    mPausedByTransientLossOfFocus = false;
+                    mMusicPlayer.replay();
+                    mAudioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                }
+                break;
+            default:
+                break;
+            }
+
+        }
+        
     };
 
     class SDStateBrocast extends BroadcastReceiver {
