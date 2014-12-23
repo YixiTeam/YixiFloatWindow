@@ -183,17 +183,28 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
 
         if (mMusicList.size() > 0) {
             mIsHaveData = true;
+            showData();
+        } else {
+            showNoData();
         }
     }
 
     public void showNoData() {
+        mAritstImage.setVisibility(View.GONE);
+        ((TextView) mLayoutView.findViewById(R.id.no_music)).setVisibility(View.VISIBLE);
+    }
 
+    public void showData() {
+        mAritstImage.setVisibility(View.VISIBLE);
+        ((TextView) mLayoutView.findViewById(R.id.no_music)).setVisibility(View.GONE);
     }
 
     public void rePlay() {
         if (mIsHaveData == false) {
             showNoData();
+            
         } else {
+            showData();
             mServiceManager.rePlay();
         }
 
@@ -207,6 +218,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         if (!mIsHaveData) {
             showNoData();
         } else {
+            showData();
             mServiceManager.playPre();
         }
 
@@ -216,6 +228,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         if (!mIsHaveData) {
             showNoData();
         } else {
+            showData();
             mServiceManager.playNext();
         }
 
@@ -371,9 +384,11 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
 
     public void registerMusicContentObserver() {
         MusicObserver musicContent = new MusicObserver(new Handler());
-        mContext.getContentResolver().registerContentObserver(
-        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, musicContent);
-        }
+        mContext.getContentResolver()
+                .registerContentObserver(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true,
+                        musicContent);
+    }
 
     class MusicObserver extends ContentObserver {
 
@@ -383,8 +398,8 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         }
         @Override
         public void onChange(boolean selfChange) {
-            // TODO Auto-generated method stub
             super.onChange(selfChange);
+            Log.d("apple", ">>>>>>>>>>>> ");
         }
     }
 

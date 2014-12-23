@@ -12,5 +12,7 @@
     <string name="contacts">联系人</string>
     <string name="search">搜索</string>
     <string name="clean_histroy">清空历史</string>
+    <string name="no_music_file">没有音频文件</string>
+    <string name="no_video_file">没有视频文件</string>
 
 </resources>

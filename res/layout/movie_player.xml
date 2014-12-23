@@ -10,6 +10,16 @@
         android:layout_height="fill_parent" />
 
     <TextView
+        android:id="@+id/no_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_video_file"
+        android:textColor="@android:color/black"
+        android:visibility="gone"
+        android:layout_centerInParent="true" >
+    </TextView>
+
+    <TextView
         android:id="@+id/movie_title"
         android:layout_width="fill_parent"
         android:layout_height="64dp"

@@ -115,7 +115,6 @@ public class FloatMovieView extends RelativeLayout implements
         mLayoutView = inflater.inflate(R.layout.movie_player, this, true);
         initView();
         init();
-        registerMusicContentObserver();
     }
 
     private void init() {
@@ -131,6 +130,9 @@ public class FloatMovieView extends RelativeLayout implements
             mSharedpreferences = mContext.getSharedPreferences(PREFERENCE_NAME, mContext.MODE_PRIVATE);
             mCurrentPos = mSharedpreferences.getInt(PREFERENCE_POSITION, 0);
             int progress = mSharedpreferences.getInt(PREFERENCE_PROGRESS, 0);
+            if (mCurrentPos > mVideoList.size()) {
+                mCurrentPos = 0;
+            }
             mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
             if (progress == 0) {
                 mVideoView.setBackground(MediaUtils.getVideoThumbnail(mVideoList.get(mCurrentPos).mMediaId, mContext));
@@ -138,6 +140,9 @@ public class FloatMovieView extends RelativeLayout implements
                 mVideoView.setBackground(null);
                 mVideoView.seekTo(progress);
             }
+            showData();
+        } else {
+            showNoData();
         }
       
         showPlay(isPaused);
@@ -255,6 +260,14 @@ public class FloatMovieView extends RelativeLayout implements
     }
 
     public void showNoData() {
+        mVideoView.setVisibility(View.GONE);
+        ((TextView) mLayoutView.findViewById(R.id.no_video)).setVisibility(View.VISIBLE);
+    }
+
+
+    public void showData() {
+        mVideoView.setVisibility(View.VISIBLE);
+        ((TextView) mLayoutView.findViewById(R.id.no_video)).setVisibility(View.GONE);
     }
 
     public void rePlay() {
@@ -265,11 +278,13 @@ public class FloatMovieView extends RelativeLayout implements
     public void playPre() {
         isOnline = false;
         if (!mIsHaveData) {
+            showNoData();
         } else {
             if (--mCurrentPos < 0) {
                 mCurrentPos = mVideoList.size() - 1;
             }
             mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
+            showData();
             showPlay(false);
         }
 
@@ -284,31 +299,10 @@ public class FloatMovieView extends RelativeLayout implements
                 mCurrentPos = 0;
             }
             mVideoView.setVideoPath(mVideoList.get(mCurrentPos).mMediaPath);
+            showData();
             showPlay(false);
         }
-    }
-
-    public void registerMusicContentObserver() {
-        MusicObserver musicContent = new MusicObserver(new Handler());
-        mContext.getContentResolver()
-                .registerContentObserver(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true,
-                        musicContent);
-    }
-
-    class MusicObserver extends ContentObserver {
-
-        public MusicObserver(Handler handler) {
-            super(handler);
-
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            // TODO Auto-generated method stub
-            super.onChange(selfChange);
-        }
-    }
+    } 
 
     @Override
     public void doAction() {
