@@ -20,7 +20,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.RemoteException;
 
 import com.ab.util.AbDateUtil;
 import com.yixi.window.config.AppData;
@@ -36,8 +35,12 @@ public class FloatService extends Service {
     private Timer timer;
     private FloatWindowManager mFloatWindowManager;
     private Context mContext;
-    private boolean window_is_show = true;
-    private boolean isshow=false;
+    private boolean mWindowShow = true;
+    private boolean mShow = false;
+    private static final String ACTION_WINDOW_IS_SHOW = "com.phicomm.WINDOW_IS_SHOW";
+    private static final String WINDOW_IS_SHOW = "window_is_show";
+    private static final String WINDOW_DATA = "window_data";
+    private static final String IS_SHOW = "isShow";
     private SharedPreferences sharedata;
     private SharedPreferences.Editor editordata;
 
@@ -47,23 +50,15 @@ public class FloatService extends Service {
                 .getSystemService(android.content.Context.SENSOR_SERVICE);
         mContext=this.getApplicationContext();
         mFloatWindowManager = new FloatWindowManager(mContext);
-        IntentFilter filter=new IntentFilter("com.phicomm.WINDOW_IS_SHOW");
+        IntentFilter filter=new IntentFilter(ACTION_WINDOW_IS_SHOW);
         registerReceiver(mBroadcastReceiver, filter);
         mAppData = new AppData(this);
-        editordata=getSharedPreferences("window_data", 0).edit();
-        sharedata= getSharedPreferences("window_data", 0);
+        editordata=getSharedPreferences(WINDOW_DATA, 0).edit();
+        sharedata= getSharedPreferences(WINDOW_DATA, 0);
         if(sharedata==null){
-            window_is_show=true;
+            mWindowShow = true;
         }else{
-            window_is_show=sharedata.getBoolean("window_is_show", true);
-            Intent mIntent = new Intent();
-            mIntent.setAction("com.phicomm.WINDOW_NOW_SHOW");
-            if(window_is_show){
-                mIntent.putExtra("nowshow", "is_show");
-                }else{
-                    mIntent.putExtra("nowshow", "not_show");
-                }
-            sendBroadcast(mIntent);
+            mWindowShow = sharedata.getBoolean(WINDOW_IS_SHOW, true);
         }
         init();
         startStep();
@@ -124,7 +119,7 @@ public class FloatService extends Service {
         timer.cancel();
         timer = null;
         //handler = null;
-        editordata.putBoolean("window_is_show", window_is_show);
+        editordata.putBoolean(WINDOW_IS_SHOW, mWindowShow);
         editordata.commit();
         //unregisterReceiver(mBroadcastReceiver);
 
@@ -147,23 +142,23 @@ public class FloatService extends Service {
     class RefreshTask extends TimerTask {
         @Override
         public void run() {
-            if (isHome() && !mFloatWindowManager.isWindowShowing()&& window_is_show) {
+            if (isHome() && !mFloatWindowManager.isWindowShowing()&& mWindowShow) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if(!isshow){
+                        if(!mShow){
                             mFloatWindowManager.createSmallWindow(mContext);
-                            isshow=true;
+                            mShow=true;
                         }
                     }
                 });
             }
-            else if ((!isHome() && mFloatWindowManager.isWindowShowing()) || !window_is_show){
+            else if ((!isHome() && mFloatWindowManager.isWindowShowing()) || !mWindowShow){
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-//                        mFloatWindowManager.removeAllWindow(getApplicationContext());
-                        isshow=false;
+                        mFloatWindowManager.removeAllWindow(getApplicationContext());
+                        mShow=false;
                     }
                 });
             }
@@ -198,30 +193,15 @@ public class FloatService extends Service {
         return names;
     }
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver(){
-        private static final String ACTION_WINDOW_IS_SHOW = "com.phicomm.WINDOW_IS_SHOW";
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(ACTION_WINDOW_IS_SHOW)){
-                Intent mIntent = new Intent();
-                intent.setAction("com.phicomm.WINDOW_NOW_SHOW");
-
-                String show = intent.getStringExtra("isShow");
-                if(show.equals("no")){
-                    window_is_show = false;
-                    editordata.putBoolean("window_is_show", window_is_show);
-                  //send window_not_show sendBroadcast to notification bar
-                    intent.putExtra("nowshow", "not_show");
-                }
-                else if(show.equals("yes")){
-                    window_is_show = true;
-                    //send window_show sendBroadcast to notification bar
-                    editordata.putBoolean("window_is_show", window_is_show);
-                    intent.putExtra("nowshow", "is_show");
-                }
-                sendBroadcast(intent);
+                boolean show = intent.getBooleanExtra(IS_SHOW, false);
+                mWindowShow = show;
+                editordata.putBoolean(WINDOW_IS_SHOW, mWindowShow);
+                editordata.commit();
             }
-            editordata.commit();
         }
 
     };

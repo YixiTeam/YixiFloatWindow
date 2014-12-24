@@ -3,6 +3,9 @@ package com.yixi.window;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Switch;
 
 import com.ab.activity.AbActivity;
 import com.ab.util.AbAppUtil;
@@ -17,39 +20,48 @@ public class MainActivity extends AbActivity {
     //private int currentFrequency = 0;
     //private TextView mTextView;
 
+    private Switch mFloatSwitch;
+    private static final String ACTION_WINDOW_IS_SHOW = "com.phicomm.WINDOW_IS_SHOW";
+    private static final String IS_SHOW = "isShow";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //mTextView = (TextView)findViewById(R.id.test_data);
-        startServiceAndBind();
-        //acquireWakeLock();
-        finish();
+        mFloatSwitch = (Switch) findViewById(R.id.float_window_switch);
+        mFloatSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean check) {
+                if (check) {
+                    startServiceAndBind();
+                } else {
+                    stopServiceAndUnbind();
+                }
+            }
+        });
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }*/
 
     public void startServiceAndBind() {
         if (AbAppUtil.isServiceRunning(this.getApplicationContext(),
-                "com.yixi.service.FloatService")) {
+                "com.yixi.window.service.FloatService")) {
+            Intent intent = new Intent();
+            intent.setAction(ACTION_WINDOW_IS_SHOW);
+            intent.putExtra(IS_SHOW, true);
+            sendBroadcast(intent);
         } else {
             myService = new Intent(this, FloatService.class);
-            startService(myService);
         }
-
         if (myService == null) {
-            myService = new Intent(this.getApplicationContext(),
-                    FloatService.class);
+            myService = new Intent(this, FloatService.class);
         }
         startService(myService);
     }
 
     protected void onDestroy() {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_WINDOW_IS_SHOW);
+        intent.putExtra(IS_SHOW, false);
+        sendBroadcast(intent);
         super.onDestroy();
     };
 
@@ -63,5 +75,12 @@ public class MainActivity extends AbActivity {
             e.printStackTrace();
         }
         super.finish();
+    }
+    public void stopServiceAndUnbind() {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_WINDOW_IS_SHOW);
+        intent.putExtra(IS_SHOW, false);
+        sendBroadcast(intent);
+
     }
 }

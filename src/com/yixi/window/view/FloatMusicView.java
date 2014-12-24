@@ -1,5 +1,6 @@
 package com.yixi.window.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
         OnSeekBarChangeListener, IOnServiceConnectComplete, ActionCallBack {
     private ServiceManager mServiceManager;
     private static final int REFRESH_PROGRESS_EVENT = 0x0010;
+    private static final int STOP_SERVICE = 0x0011;
     private boolean mIsSdExist = false;
     private boolean mIsHaveData = false;
     public View mLayoutView;
@@ -69,6 +71,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     private MediaTimer mMusicTimer;
     private Handler mHandler;
     private Drawable mMusicImg;
+    private String mCurrPath;
 
     public FloatMusicView(Context context, AttributeSet ats) {
         super(context, ats);
@@ -268,6 +271,37 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
                     setPlayInfo(mServiceManager.getCurPosition(),
                             mCurMusicTotalTime, null, false);
                     break;
+                case STOP_SERVICE:
+                    boolean isFlag = mIsHaveData;
+                    mMusicList = MediaUtils.getMusicFileList(mContext);
+                    mIsHaveData = mMusicList.size() > 0;
+                    if (mServiceManager.getPlayState() == MediaPlayState.MPS_PLAYING) {
+                        if (!(new File(mCurrPath)).exists()) {
+                            mServiceManager.playNext();
+                        }
+                    }
+                    if (mIsHaveData != isFlag) {
+                        if (mServiceManager != null) {
+                            mServiceManager.pause();
+                        }
+                        if (mIsHaveData) {
+                            IMediaData data = mMusicList.get(0);
+                            mMusicImg = MediaUtils.getArtworkFromFile(
+                                    mContext, data.mMediaId, data.mAritstId);
+                            mCurMusicTotalTime = data.mMediaTime;
+                            if (mCurMusicTotalTime == 0) {
+                                mCurMusicTotalTime = mServiceManager.getDuration();
+                            }
+                            setPlayInfo(0, data.mMediaTime, data.mMediaName, true);
+                            showPlay(true);
+                            showData();
+                        } else {
+                            showNoData();
+                            setPlayInfo(0, 0, null, true);
+                        }
+                    }
+                    mServiceManager.refreshMusicList(mMusicList);
+                    break;
                 default:
                     break;
                 }
@@ -302,6 +336,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
 
         mMusicImg = MediaUtils.getArtworkFromFile(
                 mContext, data.mMediaId, data.mAritstId);
+        mCurrPath = data.mMediaPath;
         switch (playState) {
         case MediaPlayState.MPS_INVALID:
             mMusicTimer.stopTimer();
@@ -383,7 +418,7 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
     }
 
     public void registerMusicContentObserver() {
-        MusicObserver musicContent = new MusicObserver(new Handler());
+        MusicObserver musicContent = new MusicObserver(mContext, mHandler);
         mContext.getContentResolver()
                 .registerContentObserver(
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true,
@@ -392,14 +427,17 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
 
     class MusicObserver extends ContentObserver {
 
-        public MusicObserver(Handler handler) {
+        private Context mContext;
+        private Handler mHandler;
+        public MusicObserver(Context context, Handler handler) {
             super(handler);
-            
+            mContext = context;
+            mHandler = handler;
         }
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            Log.d("apple", ">>>>>>>>>>>> ");
+            mHandler.sendEmptyMessage(STOP_SERVICE);
         }
     }
 

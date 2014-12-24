@@ -29,5 +29,5 @@
     <string name="copy_contacts_details_finish">"Copy to clipboard finish!"</string>
     <string name="no_music_file">No audio file</string>
     <string name="no_video_file">No video file</string>
-    
+    <string name="close_float_window">Close float window, you will not to use it</string>
 </resources>

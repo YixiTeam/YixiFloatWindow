@@ -14,5 +14,5 @@
     <string name="clean_histroy">清空历史</string>
     <string name="no_music_file">没有音频文件</string>
     <string name="no_video_file">没有视频文件</string>
-
+    <string name="close_float_window">关闭悬浮框，你将不能使用它</string>
 </resources>

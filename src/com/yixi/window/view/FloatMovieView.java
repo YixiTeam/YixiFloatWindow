@@ -5,6 +5,7 @@ import java.util.List;
 import com.yixi.window.R;
 import com.yixi.window.data.IMediaData;
 import com.yixi.window.utils.MediaUtils;
+import com.yixi.window.view.FloatMusicView.MusicObserver;
 import com.yixi.window.view.FloatWindowBigView2.ActionCallBack;
 
 import android.app.Service;
@@ -19,6 +20,7 @@ import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -163,7 +165,7 @@ public class FloatMovieView extends RelativeLayout implements
             }
 
         };
-        
+        registerVideoContentObserver();
     }
 
     private void initView() {
@@ -355,5 +357,42 @@ public class FloatMovieView extends RelativeLayout implements
             }
         }
 
+    }
+
+    public void registerVideoContentObserver() {
+        VideoObserver videoContent = new VideoObserver(mContext, new Handler());
+        mContext.getContentResolver()
+                .registerContentObserver(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true,
+                        videoContent);
+    }
+
+    class VideoObserver extends ContentObserver {
+
+        private Context mContext;
+        public VideoObserver(Context context, Handler handler) {
+            super(handler);
+            mContext = context;
+        }
+        @Override
+        public void onChange(boolean selfChange) {
+            // TODO Auto-generated method stub
+            super.onChange(selfChange);
+            Log.d("apple", ">>>>>>>>>>>>>>>>>>onChange>>> ");
+            boolean isFlag = mIsHaveData;
+            mVideoList = MediaUtils.getVideoFileList(mContext);
+            mIsHaveData = mVideoList.size() > 0;
+            if (isFlag != mIsHaveData) {
+                if (mIsHaveData) {
+                    showData();
+                    mVideoView.setVideoPath(mVideoList.get(0).mMediaPath);
+                    mVideoView.setBackground(MediaUtils.getVideoThumbnail(mVideoList.get(0).mMediaId, mContext));
+                    isPaused = true;
+                    showPlay(isPaused);
+                } else {
+                    showNoData();
+                }
+            }
+        }
     }
 }
