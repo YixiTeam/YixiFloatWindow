@@ -3,6 +3,7 @@ package com.yixi.window;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
@@ -16,9 +17,6 @@ public class MainActivity extends AbActivity {
     private static final String TAG = "MainActivity";
     private Intent myService = null;
     private PowerManager.WakeLock wakeLock = null;
-
-    //private int currentFrequency = 0;
-    //private TextView mTextView;
 
     private Switch mFloatSwitch;
     private static final String ACTION_WINDOW_IS_SHOW = "com.phicomm.WINDOW_IS_SHOW";
@@ -47,14 +45,16 @@ public class MainActivity extends AbActivity {
             Intent intent = new Intent();
             intent.setAction(ACTION_WINDOW_IS_SHOW);
             intent.putExtra(IS_SHOW, true);
+            intent.putExtra("now_change", true);
             sendBroadcast(intent);
         } else {
             myService = new Intent(this, FloatService.class);
+            startService(myService);
         }
         if (myService == null) {
             myService = new Intent(this, FloatService.class);
+            startService(myService);
         }
-        startService(myService);
     }
 
     protected void onDestroy() {
@@ -81,6 +81,5 @@ public class MainActivity extends AbActivity {
         intent.setAction(ACTION_WINDOW_IS_SHOW);
         intent.putExtra(IS_SHOW, false);
         sendBroadcast(intent);
-
     }
 }

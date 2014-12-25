@@ -20,6 +20,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.ab.util.AbDateUtil;
 import com.yixi.window.config.AppData;
@@ -103,29 +104,30 @@ public class FloatService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         this.init();
-        if (timer == null) {
+        /*if (timer == null) {
             timer = new Timer();
         }
-            timer.scheduleAtFixedRate(new RefreshTask(), 0, 500);
+            timer.scheduleAtFixedRate(new RefreshTask(), 0, 500);*/
+        mFloatWindowManager.createSmallWindow(getApplicationContext());
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-//        mFloatWindowManager.removeAllWindow(getApplicationContext());
-        //mFloatWindowManager = null;
+        mFloatWindowManager.removeAllWindow(getApplicationContext());
+        mFloatWindowManager = null;
         stopStep();
         timer.cancel();
         timer = null;
         //handler = null;
         editordata.putBoolean(WINDOW_IS_SHOW, mWindowShow);
         editordata.commit();
-        //unregisterReceiver(mBroadcastReceiver);
+        unregisterReceiver(mBroadcastReceiver);
 
-        Intent intent=new Intent();
+        /*Intent intent=new Intent();
         intent.setClass(mContext, FloatService.class);
-        startService(intent);
+        startService(intent);*/
 
     }
 
@@ -139,7 +141,7 @@ public class FloatService extends Service {
         return super.onUnbind(intent);
     }
 
-    class RefreshTask extends TimerTask {
+    /*class RefreshTask extends TimerTask {
         @Override
         public void run() {
             if (isHome() && !mFloatWindowManager.isWindowShowing()&& mWindowShow) {
@@ -171,7 +173,7 @@ public class FloatService extends Service {
                 });
             }
         }
-    }
+    }*/
 
     private boolean isHome() {
         ActivityManager mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -197,8 +199,12 @@ public class FloatService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(ACTION_WINDOW_IS_SHOW)){
-                boolean show = intent.getBooleanExtra(IS_SHOW, false);
-                mWindowShow = show;
+                mWindowShow = intent.getBooleanExtra(IS_SHOW, false);
+                if (mWindowShow) {
+                    mFloatWindowManager.createSmallWindow(getApplicationContext());
+                } else {
+                    mFloatWindowManager.removeAllWindow(getApplicationContext());
+                }
                 editordata.putBoolean(WINDOW_IS_SHOW, mWindowShow);
                 editordata.commit();
             }
