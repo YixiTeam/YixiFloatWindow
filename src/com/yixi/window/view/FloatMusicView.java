@@ -243,6 +243,8 @@ public class FloatMusicView extends LinearLayout implements OnClickListener,
 
     public void exit() {
         mServiceManager.pause();
+        mContext.unregisterReceiver(mPlayStateBrocast);
+        mContext.unregisterReceiver(mPhoneReceiver);
         showPlay(false);
         
     }
