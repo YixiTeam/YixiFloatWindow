@@ -120,11 +120,11 @@ public class FloatWindowBigView extends LinearLayout {
         mFrameLayout = (FrameLayout) findViewById(R.id.bigwindowlayout);
         mFrameLayout1 = (FrameLayout) findViewById(R.id.medialayout);
         
-        mediaImageview = (ImageView) findViewById(R.id.image1);
-        widgetImageview = (ImageView) findViewById(R.id.image2);
-        missImageview = (ImageView) findViewById(R.id.image3);
-        cleanImageview = (ImageView) findViewById(R.id.image4);
-        setImageview = (ImageView) findViewById(R.id.image5);
+        mediaImageview = (ImageView) findViewById(R.id.multimedia);
+        widgetImageview = (ImageView) findViewById(R.id.widget);
+        missImageview = (ImageView) findViewById(R.id.reduce);
+        cleanImageview = (ImageView) findViewById(R.id.clear);
+        setImageview = (ImageView) findViewById(R.id.settings);
         
         backBut = (Button) findViewById(R.id.back);
         exitBut = (Button) findViewById(R.id.exit);

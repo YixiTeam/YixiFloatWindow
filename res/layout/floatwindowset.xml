@@ -28,7 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_pedometer" />
+                    android:src="@drawable/ic_lock" />
             </LinearLayout>
 
             <LinearLayout
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="25dp"
-                    android:src="@drawable/ic_pedometer" />
+                    android:src="@drawable/ic_shotscreen" />
 
                 <ImageView
                     android:id="@+id/volume_up"
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="100dp"
-                    android:src="@drawable/ic_pedometer" />
+                    android:src="@drawable/ic_volume_up" />
             </LinearLayout>
 
             <LinearLayout
@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_pedometer" />
+                    android:src="@drawable/ic_volume_down" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

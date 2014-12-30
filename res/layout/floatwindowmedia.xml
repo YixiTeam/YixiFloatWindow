@@ -28,14 +28,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_pedometer" />
+                    android:src="@drawable/ic_music" />
                 <ImageView
                     android:id="@+id/video"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_pedometer" />
+                    android:src="@drawable/ic_video" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
