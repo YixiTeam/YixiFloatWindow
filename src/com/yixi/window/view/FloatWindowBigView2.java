@@ -93,9 +93,10 @@ public class FloatWindowBigView2 extends LinearLayout {
         		mFlag = FloatWindowManager.MEDIA_LAYER;
                 mActionCallBack = (ActionCallBack) findViewById(R.id.movie_view);
         		break;
-        	case R.layout.floatwindowcal:
+        	case R.layout.float_window_cal:
         		title.setText(R.string.cal);
         		mFlag = FloatWindowManager.WIDGET_LAYER;
+        		mActionCallBack = (ActionCallBack) findViewById(R.id.calculator);
         		break;
         	case R.layout.float_window_contact:
         		title.setText(R.string.contacts);

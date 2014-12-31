@@ -5,7 +5,7 @@
     android:layout_height="330.6dp"
     android:background="@drawable/bg_pedometer"
     android:gravity="center" >
-    
+
     <include
         android:id="@+id/head_layout"
         android:layout_width="320.6dp"
@@ -24,11 +24,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <TextView 
+            <include
+                android:id="@+id/calculator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/hello_world"
-                android:textSize="20sp" />
+                layout="@layout/calculator_pad" />
         </LinearLayout>
     </FrameLayout>
 

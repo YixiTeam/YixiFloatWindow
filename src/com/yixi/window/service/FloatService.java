@@ -145,6 +145,9 @@ public class FloatService extends Service {
         @Override
         public void run() {
             if (isHome() && !mFloatWindowManager.isWindowShowing()&& mWindowShow) {
+
+            if (!mFloatWindowManager.isWindowShowing()&& window_is_show) {
+
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -161,10 +164,19 @@ public class FloatService extends Service {
                     public void run() {
                         mFloatWindowManager.removeAllWindow(getApplicationContext());
                         mShow=false;
+            else if (mFloatWindowManager.isWindowShowing() || !window_is_show){
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    	if(){
+                    		
+//                        mFloatWindowManager.removeAllWindow(getApplicationContext());
+                    		isshow=false;
+                    	}
                     }
                 });
             }
-            else if (isHome() && mFloatWindowManager.isWindowShowing()) {
+            else if (mFloatWindowManager.isWindowShowing()) {
                 handler.post(new Runnable() {
 
                     @Override

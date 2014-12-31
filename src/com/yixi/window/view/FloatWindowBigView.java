@@ -169,7 +169,7 @@ public class FloatWindowBigView extends LinearLayout {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.d(TAG,	"------FloatWindowBigView--------calBtn------Click!!-----");
-				openNextWindow(R.layout.floatwindowcal);
+				openNextWindow(R.layout.float_window_cal);
 			}
 		});
         

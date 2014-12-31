@@ -8,7 +8,7 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4 andbase
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4 andbase arity guava
 
 LOCAL_MODULE_TAGS := optional
 
@@ -24,7 +24,8 @@ include $(BUILD_PACKAGE)
 ##################################################
 include $(CLEAR_VARS)
 
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := andbase:libs/andbase.jar
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := andbase:libs/andbase.jar \
+    arity:libs/arity-2.1.2.jar
 
 include $(BUILD_MULTI_PREBUILT)
 # Use the folloing include to make our test apk.
