@@ -19,7 +19,6 @@
     <string name="note_select_all">"SelectAll"</string>
     <string name="note_copy">"Copy"</string>
     <string name="note_plaster">"Plaster"</string>
-    
     <string name="search_bar_hint">"Search"</string>
     <string name="search_all">"SelectAll"</string>
     <string name="search_copy_btn">"Copy"</string>
@@ -30,7 +29,7 @@
     <string name="no_music_file">No audio file</string>
     <string name="no_video_file">No video file</string>
     <string name="close_float_window">Close float window, you will not to use it</string>
-    
+
     <!-- If there is a syntax error in the user entered calculation, an error dialog will appear.  This is the title. -->
     <string name="error">Error</string>
     <!-- Displayed numbers for the digit buttons -->
@@ -73,30 +72,30 @@
     <string name="enter">\u2193</string>
     <!-- Displayed on buttons on screen for the sin function. -->
     <string name="sin">sin</string>
-    <!-- Do not translate. What we replace translated SIN with for calculating sin.-->
-    <string translate="false" name="sin_mathematical_value">sin</string>
+    <!-- Do not translate. What we replace translated SIN with for calculating sin. -->
+    <string name="sin_mathematical_value" translate="false">sin</string>
     <!-- Displayed on buttons on screen for the cos function. -->
     <string name="cos">cos</string>
     <!-- Do not translate. What we replace translated COS with for calculating cos. -->
-    <string translate="false" name="cos_mathematical_value">cos</string>
+    <string name="cos_mathematical_value" translate="false">cos</string>
     <!-- Displayed on buttons on screen for the tan function. -->
     <string name="tan">tan</string>
     <!-- Do not translate. What we replace translated TAN with for calculating tan. -->
-    <string translate="false" name="tan_mathematical_value">tan</string>
+    <string name="tan_mathematical_value" translate="false">tan</string>
     <!-- Do not translate. Unicode pi sign; don't translate. Displayed as button on screen. -->
     <string name="pi">\u03c0</string>
     <!-- Displayed on buttons on screen for the e function. -->
     <string name="e">e</string>
     <!-- Do not translate. What we replace translated e with for calculating e. -->
-    <string translate="false" name="e_mathematical_value">e</string>
+    <string name="e_mathematical_value" translate="false">e</string>
     <!-- Displayed on buttons on screen for the ln function. -->
     <string name="ln">ln</string>
     <!-- Do not translate. What we replace translated ln with for calculating ln. -->
-    <string translate="false" name="ln_mathematical_value">ln</string>
+    <string name="ln_mathematical_value" translate="false">ln</string>
     <!-- Displayed on buttons on screen for the log function. -->
     <string name="lg">log</string>
     <!-- Do not translate. What we replace translated lg with for calculating lg. -->
-    <string translate="false" name="lg_mathematical_value">lg</string>
+    <string name="lg_mathematical_value" translate="false">lg</string>
     <!-- Displayed on buttons on screen for a left parenthesis. -->
     <string name="leftParen">(</string>
     <!-- Displayed on buttons on screen for a right parenthesis. -->
@@ -117,9 +116,11 @@
     <string name="text_copied_toast">Text copied.</string>
     <string name="number_too_long">Number is too long.</string>
 
-    <!--Content descriptions for accessibility. These strings will be read aloud to users who are using the calculator with
+    <!--
+    Content descriptions for accessibility. These strings will be read aloud to users who are using the calculator with
     accessibility features enabled and should reflect the mathematical concept instead of a direct representation of what is shown
-    on the button-->
+    on the button
+    -->
     <string name="leftParenDesc">left parenthesis</string>
     <string name="rightParenDesc">right parenthesis</string>
     <string name="factorialDesc">factorial</string>
@@ -141,9 +142,11 @@
     <string name="piDesc">pi</string>
     <string name="equalDesc">equals</string>
 
-    <!--Content descriptions for accessibility used as keys when determining which mathematical
+    <!--
+    Content descriptions for accessibility used as keys when determining which mathematical
     concept description to speak when accessibility features are enabled. Order of the array is
-    important. -->
+    important.
+    -->
     <string-array name="operators" translatable="false">
         <item>(</item>
         <item>)</item>
@@ -164,46 +167,79 @@
         <item>=</item>
     </string-array>
 
-    <!--Content descriptions for accessibility. These strings will be read aloud to users who
+    <!--
+     Content descriptions for accessibility. These strings will be read aloud to users who
      are using the calculator with accessibility features enabled and hover over the edit text
      field. These should reflect the mathematical concept instead of a direct representation of
-     what is shown in the text field. Order of the array is important.-->
+     what is shown in the text field. Order of the array is important.
+    -->
     <string-array name="operatorDescs">
-        <!-- Description for mathematical ( [CHAR LIMIT=200]-->
+
+        <!-- Description for mathematical ( [CHAR LIMIT=200] -->
         <item>left parenthesis</item>
-        <!-- Description for mathematical ) [CHAR LIMIT=200]-->
+        <!-- Description for mathematical ) [CHAR LIMIT=200] -->
         <item>right parenthesis</item>
-        <!-- Description for mathematical ! (factorial) function [CHAR LIMIT=200]-->
+        <!-- Description for mathematical ! (factorial) function [CHAR LIMIT=200] -->
         <item>factorial</item>
-        <!-- Description for mathematical ln [CHAR LIMIT=200]-->
+        <!-- Description for mathematical ln [CHAR LIMIT=200] -->
         <item>natural logarithm</item>
-        <!-- Description for mathematical log [CHAR LIMIT=200]-->
+        <!-- Description for mathematical log [CHAR LIMIT=200] -->
         <item>logarithm</item>
-        <!-- Description for mathematical square root [CHAR LIMIT=200]-->
+        <!-- Description for mathematical square root [CHAR LIMIT=200] -->
         <item>square root</item>
-        <!-- Description for mathematical / [CHAR LIMIT=200]-->
+        <!-- Description for mathematical / [CHAR LIMIT=200] -->
         <item>divided by</item>
-        <!-- Description for mathematical x [CHAR LIMIT=200]-->
+        <!-- Description for mathematical x [CHAR LIMIT=200] -->
         <item>multiplied by</item>
-        <!-- Description for mathematical + [CHAR LIMIT=200]-->
+        <!-- Description for mathematical + [CHAR LIMIT=200] -->
         <item>plus</item>
-        <!-- Description for mathematical - [CHAR LIMIT=200]-->
+        <!-- Description for mathematical - [CHAR LIMIT=200] -->
         <item>minus</item>
-        <!-- Description for mathematical . [CHAR LIMIT=200]-->
+        <!-- Description for mathematical . [CHAR LIMIT=200] -->
         <item>&#160;point&#160;</item>
-        <!-- Description for mathematical ^ [CHAR LIMIT=200]-->
+        <!-- Description for mathematical ^ [CHAR LIMIT=200] -->
         <item>power</item>
-        <!-- Description for mathematical TAN [CHAR LIMIT=200]-->
+        <!-- Description for mathematical TAN [CHAR LIMIT=200] -->
         <item>tangent</item>
-        <!-- Description for mathematical SIN [CHAR LIMIT=200]-->
+        <!-- Description for mathematical SIN [CHAR LIMIT=200] -->
         <item>sine</item>
-        <!-- Description for mathematical COS [CHAR LIMIT=200]-->
+        <!-- Description for mathematical COS [CHAR LIMIT=200] -->
         <item>cosine</item>
-        <!-- Description for mathematical PI [CHAR LIMIT=200]-->
+        <!-- Description for mathematical PI [CHAR LIMIT=200] -->
         <item>pi</item>
-        <!-- Description for mathematical = [CHAR LIMIT=200]-->
+        <!-- Description for mathematical = [CHAR LIMIT=200] -->
         <item>equals</item>
     </string-array>
+
+    <string name="umeng_common_action_info_exist">The app is already in downloading list.</string>
+    <string name="umeng_common_info_interrupt">dowload interrupted.</string>
+    <string name="umeng_common_action_pause">Pause</string>
+    <string name="umeng_common_action_continue">Continue</string>
+    <string name="umeng_common_action_cancel">Cancel</string>
+    <string name="umeng_common_download_notification_prefix">Downloading: </string>
+    <string name="umeng_common_pause_notification_prefix">Pause: </string>
+    <string name="umeng_common_start_download_notification">Download start.</string>
+    <string name="umeng_common_start_patch_notification">Patch start.</string>
+    <string name="umeng_common_network_break_alert">Please make sure you are connected to internet, download failed</string>
+    <string name="umeng_common_download_failed">Download Failed! </string>
+    <string name="umeng_common_download_finish">Download finished,click to install it.</string>
+    <string name="umeng_common_patch_finish">Patch finished,click to install it.</string>
+    <string name="umeng_common_silent_download_finish">New version is ready,click to install it.</string>
+    <string name="umeng_common_icon">icon</string>
     
->>>>>>> Stashed changes
+    <string name="UMBreak_Network">Please make sure you are connected to internet,update failed</string>
+    <string name="UMUpdateTitle">New version found</string>
+    <string name="UMNewVersion">Latest version: </string>
+    <string name="UMUpdateContent">Update Content</string>
+    <string name="UMUpdateSize">Update size: </string>
+    <string name="UMTargetSize">Target size: </string>
+    <string name="UMGprsCondition">(Warning: Not WIFI Condition)</string>
+    <string name="UMUpdateNow">Update now</string>
+    <string name="UMAppUpdate">App updating</string>
+    <string name="UMNotNow">Not now</string>
+    <string name="UMIgnore">Ingore this</string>
+    <string name="UMToast_IsUpdating">Updating....</string>
+    <string name="UMDialog_InstallAPK">The lastest version has been downloaded, install now ?</string>
+    <string name="UMUpdateCheck">2.4.2.20140520</string>
+
 </resources>

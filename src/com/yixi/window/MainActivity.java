@@ -10,6 +10,7 @@ import android.widget.Switch;
 
 import com.ab.activity.AbActivity;
 import com.ab.util.AbAppUtil;
+import com.umeng.update.UmengUpdateAgent;
 import com.yixi.window.service.FloatService;
 
 public class MainActivity extends AbActivity {
@@ -24,6 +25,7 @@ public class MainActivity extends AbActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UmengUpdateAgent.update(this);
         setContentView(R.layout.activity_main);
         mFloatSwitch = (Switch) findViewById(R.id.float_window_switch);
         mFloatSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
